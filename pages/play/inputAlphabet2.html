@@ -139,6 +139,7 @@
           .then(res => res.text())
           .then(data => {
             document.getElementById("footer").innerHTML = data;
+            initFooter();
           });
         fetch("../layout/exciting.html")
           .then(res => res.text())

@@ -13,14 +13,6 @@ $(document).ready(function() {
 	
 		updateDisplay(); // 1초 딜레이 없애기
 		setInterval(updateDisplay, 1000); // 1초 간격으로 업데이트
-		
-		$('.hint-area .hint-levels .btn').click(function(){ // 힌트버튼 클릭
-			if($(this).hasClass('btn-primary')){ // 이미 사용한 버튼은 팝업 안 띄우기
-				showExistHint($(this).attr("data-hint-level"));
-			}else{
-				showHint($(this).attr("data-hint-level"), $(this));
-			}
-		});
 	
 		$('#userNameLink').click(function(){ // 이름 버튼 클릭
 			location.href = "../start.html";
@@ -254,4 +246,17 @@ function initHeader(){
 		location.href = "start.html";
 	});
 	setUserStageInfo();
+}
+
+// fetch footer load된 다음 실행
+function initFooter(){
+		
+	$('.hint-area .hint-levels .btn').click(function(){ // 힌트버튼 클릭
+		if($(this).hasClass('btn-primary')){ // 이미 사용한 버튼은 팝업 안 띄우기
+			showExistHint($(this).attr("data-hint-level"));
+		}else{
+			showHint($(this).attr("data-hint-level"), $(this));
+		}
+	});
+	$('#popup-close-btn').click(closePopup);
 }
