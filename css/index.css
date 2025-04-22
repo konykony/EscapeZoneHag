@@ -1,0 +1,119 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'straw-milky';
+	src: url('/fonts/Straw-Milky.ttf') format('truetype');
+}
+
+body {
+	/* 	background-color: rgba(0, 0, 0, 0.2); 연한 회색, 50% 투명도 */
+	/* 	display: flex; */
+	/* 	flex-direction: column; */
+	/* 	align-items: center; */
+	/* 	justify-content: center; */
+	/* 	min-height: 100vh; */
+	/* 	padding: 20px; */
+	/* 	box-sizing: border-box; */
+}
+
+.container {
+	background-color: #fff;
+	padding: 0;
+	/* 	border-radius: 10px; */
+	/* 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
+	/* 	padding: 40px; */
+	text-align: center;
+	/* 	width: 80%; */
+	max-width: 700px;
+}
+
+/* h1 { */
+/* 	font-size: 2.5em; */
+/* 	color: #d16168; */
+/* 	margin-bottom: 30px; */
+/* 	text-align: center; 제목 가운데 정렬 유지 */
+/* 	font-family: straw-milky; */
+/* } */
+
+.image-container {
+	display: flex;
+	/* 이미지를 가운데 정렬하기 위한 flexbox */
+	justify-content: center;
+	width: 100%;
+	/* 	margin-bottom: 30px; */
+}
+
+.image-container img {
+	width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 5px;
+	/* 	max-width: 300px; */
+}
+
+.input-group {
+	margin-bottom: 20px;
+	width: 80%;
+	max-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.button-container {
+	display: flex;
+	/* 버튼들을 가운데 정렬하기 위한 flexbox */
+	justify-content: center;
+	gap: 20px;
+	width: 80%;
+	margin-top: 20px;
+	/* 이름 입력칸과의 간격 조정 */
+}
+
+.btn {
+	width: 6.25em;
+}
+
+/* .btn-start {
+       background-color: #d16168;
+       color: white;
+       border: 1px solid #d16168;
+   }
+
+   .btn-reset {
+       background-color: #6c757d;
+       color: white;
+   }
+
+   .btn-start:hover {
+       border-color: #b75056;
+   }
+
+   .btn-reset:hover {
+       background-color: #545b62;
+   } */
+
+/* 반응형 디자인 */
+@media (max-width : 768px) {
+	.container {
+		/* 		width: 95%; */
+		/* 		padding: 30px; */
+	}
+
+	h1 {
+		font-size: 2em;
+		margin-bottom: 20px;
+	}
+
+	.image-container {
+		width: 100%;
+		/* 		margin: 50px auto; */
+	}
+
+	.img-container img {
+		max-width: 200px;
+	}
+
+	.input-group {
+		width: 90%;
+	}
+}
