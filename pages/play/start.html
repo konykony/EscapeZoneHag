@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EscapeZone</title>
-	<link rel="stylesheet" href="../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="../css/common.css" />
-	<link rel="stylesheet" href="../css/index.css" />
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../../css/common.css" />
+	<link rel="stylesheet" href="../../css/index.css" />
 	<style type="text/css">
 		body { /* 또는 배경 이미지를 적용할 요소 */
 			height: 100vh; /* 뷰포트 높이의 100% */
@@ -43,7 +43,7 @@
     </div>
     <div class="container">
         <div class="image-container">
-            <img src="../img/0505/startPoster.jpg" class="img-fluid rounded">
+            <img src="../../img/0505/startPoster.jpg" class="img-fluid rounded">
         </div>
         <div class="button-container w-100">
             <button class="btn btn-primary btn-lg btn-block btn-start">시작</button>
@@ -51,20 +51,14 @@
             <button class="btn btn-secondary btn-lg btn-block btn-lock-test">자물쇠</button>
         </div>
 	</div>  	
-	<div id="scripts"></div>
-	<script src="../lib/jquery/dist/jquery.min.js"></script>
-	<script src="../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
-	<script src="../js/cookieManage.js"></script>
-	<script src="../js/jsonManage.js"></script>
-	<script src="../js/common.js"></script>
-	<script src="../js/jsonData/0505.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
    	<script type="text/javascript">
-		fetch("layout/scripts.html")
-			.then(res => res.text())
-			.then(data => {
-				document.getElementById("scripts").innerHTML = data;
-		}).catch(error => console.error("Error loading script:", error));
 	   	$(document).ready(function() {
 	   		$('.btn-start').click(function() {
 	   			onClickStart();
@@ -165,7 +159,7 @@
 	   	
 	   	// 자물쇠 테스트
 	   	function onClickLockTest(){
-	   		location.href = '../pages/play/lockTest.html';
+	   		location.href = 'lockTest.html';
 	   	}
 	</script>
 </body>
