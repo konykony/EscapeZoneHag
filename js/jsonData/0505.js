@@ -8,7 +8,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "5692",
 			"content" : "납치된 헨젤의 방에 들어가 단서를 찾으려는 그레텔은, 헨젤이 방 비밀번호를 바꿀 때마다 방문 앞 사진도 함께 바꿔놓는다는 사실을 기억해요. 이번에 바꾼 사진은 머리끝부터 발끝까지 정말 사랑스럽게 찍혀 있답니다. 헨젤의 방 비밀번호는?",
-			"lock": "InputNumber.jsp",
+			"lock": "inputNumber.html",
 			"imgUrl" : ""
       },
       {
@@ -16,7 +16,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "0349",
 			"content" : "그레텔은 헨젤의 방에 들어갔더니, 벽시계가 깨져 있는 채로 곳곳에 흩어져 있고 한 번도 본 적 없는 상자가 놓여 있는 것을 발견했어요. 방에 흩어진 깨진 시계 조각들을 잘 살펴보시고, 상자의 비밀번호를 맞춰 보세요!",
-			"lock": "InputNumber.jsp",
+			"lock": "inputNumber.html",
 			"imgUrl" : ""
 		},
 		{
@@ -24,31 +24,31 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "BREAD",
 			"content" : '헨젤은 편지로 "마녀가 새엄마로 변장했어!"라고 그레텔에게 알려줬어요. 그레텔은 오빠를 구하러 가기 전에 식량창고에 들러 음식을 챙기려 해요. 그런데 창고 앞에는 그림자 5개가 놓여 있어요. 어떤 음식을 챙겨야 할까요?(대문자 입력)',
-			"lock": "InputText.jsp"			,
-			"imgUrl" : "/img/0505/puzzle03.png"
+			"lock": "inputText.html"			,
+			"imgUrl" : "../../img/0505/puzzle03.png"
 		},
 		{
 			"stage": 4,
 			"title": "Tom",
 			"solution": 792,
 			"content" : '그레텔은 숲속을 조심조심 걷다가 말했어요. “마녀의 집은 어디지…?” 그때! 깡충깡충 토끼가 나타나 말했어요. “똑똑한 아이에게만 길을 알려줄 거야!” 그리고 수수께끼를 하나 내줬어요.문제를 풀면 마녀의 집 위치를 알 수 있어요!',
-			"lock": "InputNumber2.jsp"			,
-			"imgUrl" : "/img/0505/puzzle04.png"
+			"lock": "inputNumber2.html"			,
+			"imgUrl" : "../../img/0505/puzzle04.png"
 		},
 		{
 			"stage": 5,
 			"title": "Tom",
 			"solution": 358,
 			"content" : '침대 밑을 살펴보니 봉투가 하나 놓여 있었어요. 토끼가 "이 안에 수수께끼랑 퍼즐이 들어 있어. 퍼즐을 맞추면 마녀의 집 지도를 찾을 수 있어!"라고 말해 주었어요. 봉투 안에는 정말로 수수께끼와 그림이 그려진 퍼즐이 들어 있네요. 퍼즐을 맞춰 상자의 비밀번호를 찾아보세요!',
-			"lock": "InputNumber2.jsp",
-			"imgUrl" : "/img/0505/puzzle05.png"
+			"lock": "inputNumber2.html",
+			"imgUrl" : "../../img/0505/puzzle05.png"
 		},
 		{
 			"stage": 6,
 			"title": "Tom",
 			"solution": "btn_candy_on.png,btn_cookie_on.png,btn_lollipop_on.png",
 			"content" : '상자를 열어보니 지도가 들어있어요. 지도 위에 여러 개의 길이 있어요. 그레텔이 지도를 보던 중, “꼬르륵…” 배가 고파졌어요. ★는 시작, X는 도착! 그레텔은 어느 길로 갔을까요?',
-			"lock": "InputMap.jsp",
+			"lock": "inputMap.html",
 			"imgUrl" : ""
 		},
 		{
@@ -56,16 +56,16 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "RIGHT,UP,RIGHT,DOWN",
 			"content" : '마침내 헨젤은 마녀가 살고 있는 과자의 집을 발견했어요. 배가 너무 고팠던 그레텔은 집에 붙어있는 과자를 한입 먹다가 벽에 그려진 화살표 암호를 발견해요. 화살표의 규칙을 찾아 다음에 나올 4개의 방향을 맞히세요!',
-			"lock": "InputDirection.jsp",
-			"imgUrl" : "/img/0505/puzzle07.png"
+			"lock": "inputDirection.html",
+			"imgUrl" : "../../img/0505/puzzle07.png"
 		},
 		{
 			"stage": 8,
 			"title": "Tom",
 			"solution": "도망가",
 			"content" : '암호를 풀니 과자의집 문이 열렸어요. 과자의 집 안으로 들어가자, 마녀가 따뜻한 미소를 지으며 그레텔에게 맛있는 음식을 차려주었습니다. 그레텔은 허겁지겁 음식을 먹고 있는데, 한 생쥐가 쪽지 한 장을 건네 주었어요. 당신은 그 안에 어떤 메시지가 숨겨져 있다는 걸 눈치챘습니다. 생쥐는 당신에게 무엇을 말하고 싶었던 걸까요?',
-			"lock": "InputText.jsp",
-			"imgUrl" : "/img/0505/puzzle08.png"
+			"lock": "inputText.html",
+			"imgUrl" : "../../img/0505/puzzle08.png"
 		},
 		{
 			"stage": 9,
@@ -77,7 +77,7 @@ const puzzleData = {
     	        {"color": "purple", "value": 1}
     	      ]},
 			"content" : '쪽지를 보던 그레텔에게 마녀는 집 청소를 시켰어요. 먼지를 털던 그레텔은 벽에 걸린 오래된 그림 하나를 발견합니다. 무엇을 의미할까요?',
-			"lock": "InputNumber3.jsp",
+			"lock": "inputNumber3.html",
 			"imgUrl" : ""
 		},
 		{
@@ -85,7 +85,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "호랑이",
 			"content" : '비밀문이 열리며 헨젤이 갇힌 공간이 나타나요.  마녀는 헨젤이 살이 찌는지 확인해 보려고 매일 헨젤의 팔을 만지며 살이 올랐는지 살펴보았어요. 하지만 마녀는 눈이 아주 나빠서 진짜 팔이 아니어도 구분을 못 해요. 쓰레기통에서 뼈다귀를 찾아서 헨젤에게 가져다 줘야 해요.',
-			"lock": "InputText.jsp",
+			"lock": "inputText.html",
 			"imgUrl" : ""
 		},
 		{
@@ -93,16 +93,16 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "운명을 뒤집어라",
 			"content" : '마녀가 잠든 틈에 헨젤과 그레텔은 마법책에서 “저주를 되돌리는 주문＂을 찾았지만 해석을 할 수 없었어요. 어떻게 해야 할까요?',
-			"lock": "InputText.jsp",
-			"imgUrl" : "/img/0505/puzzle11.png"
+			"lock": "inputText.html",
+			"imgUrl" : "../../img/0505/puzzle11.png"
 		},
 		{
 			"stage": 12,
 			"title": "Tom",
 			"solution": "HOME",
 			"content" : '아까 만났던 토끼와 생쥐는 사실 마녀의 저주 마법으로 동물로 변한 아이들이었어요. 헨젤이 마법주문을 외우자 마녀는 동물로 변해 철창에 갇히고 마법 포털이 열렸어요. 자물쇠에 되돌아갈 장소를 입력해야해요.',
-			"lock": "InputAlphabet.jsp",
-			"imgUrl" : "/img/0505/puzzle12.png"
+			"lock": "inputAlphabet.html",
+			"imgUrl" : "../../img/0505/puzzle12.png"
 		},
 	]
 };

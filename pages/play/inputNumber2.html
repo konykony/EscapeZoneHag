@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"> 
+    <title>EscapeZone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../../css/common.css" />
+	<link rel="stylesheet" href="../../css/head.css" />
+<style>
+
+  .lock-container {
+  
+	width: 210px;
+	height: 299px;
+	background-image: url(../..//img/lock/lock_05_on.png);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 150px;
+  }
+
+  .digit-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .arrow-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .digit-display {
+    background-color: white;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0px 5px;
+    border-radius: 5px;
+     width: 30px; 
+    text-align: center;
+    margin: 0 10px;
+  }
+
+  .message {
+    color: white;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+	<header>
+		<div id="header"></div>
+	</header>
+	<main>
+		<div class="container">
+
+            <h5 id="test-messege" class="mt-3">123를 입력하세요.</h5>
+            <div id="puzzle-contents" class="puzzle-place">
+                <img id="puzzleImg" class="w-100">
+                <div id="puzzleContent"></div>
+            </div>
+			<div class="lock-container mx-auto mt-3">
+				<div class="digit-row">
+					<button class="arrow-button" onclick="changeDigit(0, -1)">◀</button>
+					<div id="digit-0" class="digit-display">0</div>
+					<button class="arrow-button" onclick="changeDigit(0, 1)">▶</button>
+				</div>
+				<div class="digit-row">
+					<button class="arrow-button" onclick="changeDigit(1, -1)">◀</button>
+					<div id="digit-1" class="digit-display">0</div>
+					<button class="arrow-button" onclick="changeDigit(1, 1)">▶</button>
+				</div>
+				<div class="digit-row">
+					<button class="arrow-button" onclick="changeDigit(2, -1)">◀</button>
+					<div id="digit-2" class="digit-display">0</div>
+					<button class="arrow-button" onclick="changeDigit(2, 1)">▶</button>
+				</div>
+<!-- 				<div id="message" class="message"></div> -->
+			</div>
+			<div class='text-center mt-3'>
+				<button id="beforeButton" class="btn btn-secondary ms-2 mt-3">이전</button>
+			</div>
+			<div id="result" class="mt-3"></div>
+		</div>
+	</main>
+    <footer>
+		<div id="footer"></div>
+    </footer>
+	<div id="exciting"></div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+  	<script src="../../js/playComm.js"></script>
+	<script type="text/javascript">
+
+        fetch("../layout/header.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("header").innerHTML = data;
+			initHeader();
+          });
+        fetch("../layout/footer.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("footer").innerHTML = data;
+          });
+        fetch("../layout/exciting.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("exciting").innerHTML = data;
+          });
+          
+		
+		var isAnswerCorrect = false; // 정답 맞추면 true
+		const digits = [ 0, 0, 0 ];
+		const digitElements = [ document.getElementById('digit-0'),
+				document.getElementById('digit-1'),
+				document.getElementById('digit-2') ];
+		const messageElement = document.getElementById('message');
+		const correctAnswer = '123'; // 정답을 문자열 형태로 저장
+
+		function updateDisplay() {
+			for (let i = 0; i < 3; i++) {
+				digitElements[i].textContent = String(digits[i]).padStart(1,
+						'0');
+			}
+		}
+
+		function changeDigit(index, direction) {
+			digits[index] += direction;
+			if (digits[index] < 0) {
+				digits[index] = 9;
+			} else if (digits[index] > 9) {
+				digits[index] = 0;
+			}
+			updateDisplay();
+			checkAnswer();
+		}
+
+		// 정답 확인
+		function checkAnswer() {
+			if(isAnswerCorrect){
+				return;
+			}
+			playButtonClickSound(); // 자물쇠 버튼 클릭하면 소리 재생
+ 			const currentAnswer = digits.map(String).join(''); // 현재 선택된 숫자를 문자열로 합침
+			if (checkTestMode()) { // 테스트 모드인 경우
+	 			if (currentAnswer === correctAnswer) {
+	 				setSuccess();
+	 			}
+			}else{
+				if(checkSolution(currentAnswer)){
+					setSuccess();
+					setTimeout(() => {
+// 						goExcitingPage();
+						showExciting();
+					}, 1000);
+				}
+			}
+// 			const currentAnswer = digits.map(String).join(''); // 현재 선택된 숫자를 문자열로 합침
+// 			if (currentAnswer === correctAnswer) {
+// 				messageElement.textContent = "정답입니다!";
+// 				messageElement.style.backgroundColor = "green";
+// 				messageElement.style.padding = "10px";
+// 				messageElement.style.borderRadius = "5px";
+// 			} else {
+// 				messageElement.textContent = "다시 시도해보세요.";
+// 				messageElement.style.backgroundColor = "red";
+// 				messageElement.style.padding = "10px";
+// 				messageElement.style.borderRadius = "5px";
+// 			}
+		}
+		
+		// 성공 했을 때 실행
+		function setSuccess(){
+// 			messageElement.textContent = "정답입니다!";
+// 			messageElement.style.backgroundColor = "green";
+// 			messageElement.style.padding = "10px";
+// 			messageElement.style.borderRadius = "5px";
+			var currentStage = getGameStage();
+			if(currentStage % 2 === 0){
+				$(".lock-container").css("background-image", "url('/img/lock/lock_05_off.png')");
+			}else{
+				$(".lock-container").css("background-image", "url('/img/lock/lock_07_off.png')");
+			}
+// 			$(".lock-container").css({"background-image": "url(/img/lock/lock_05_off.png)"});
+			$("#result").removeClass("alert-danger").addClass("alert-success").text("정답입니다!").slideDown();
+			isAnswerCorrect = true;
+			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
+		}
+		
+        $(document).ready(function() {
+        	
+        	if (!checkTestMode()) { // 테스트 모드가 아닌 경우
+        		answer = getSolution();
+                $('#test-messege').hide();
+                $('#beforeButton').hide();
+            }else{
+                $('#test-messege').show();
+                $('#puzzle-contents').hide();
+        	}
+
+    		// 초기 표시
+    		updateDisplay();
+            $("#beforeButton").on("click", function() {
+            	location.href = 'LockTest.html';
+            });
+			setChangeLockImg();
+        });
+		
+		function setChangeLockImg(){
+			var currentStage = getGameStage();
+			if(currentStage % 2 === 0){
+				$(".lock-container").css("background-image", "url('../../img/lock/lock_05_on.png')");
+			}else{
+				$(".lock-container").css("background-image", "url('../../img/lock/lock_07_on.png')");
+			}
+		}
+
+	</script>
+</body>
+</html>

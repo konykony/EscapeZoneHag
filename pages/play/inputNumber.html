@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"> 
+    <title>EscapeZone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../../css/common.css" />
+	<link rel="stylesheet" href="../../css/head.css" />
+<style>
+#number-container {
+	/*             background-color: #f8f9fa; */
+	width: 190px;
+	height: 230px;
+	background-image: url(../../img/lock/lock_02_on.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	padding: 91px 22px 0;
+	margin: 20px auto 0; border-radius : 5px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	border-radius: 5px;
+}
+
+.number-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/*             margin-right: 10px; */
+}
+
+.number-group:last-child {
+	margin-right: 0;
+}
+
+.number-display {
+	width: 30px;
+	text-align: center;
+	margin: 2px 0;
+	padding: 3px 0;
+	color: white;
+	border: 1px solid white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.1); /* 파란색 배경, 30% 투명 */
+}
+
+.move-button {
+	padding: 0 8px;
+	/*             padding: 3px 8px; */
+	font-size: 1.2em;
+	color: white;
+	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.move-button:hover {
+	color: white;
+}
+
+.check-button-container {
+	text-align: center; /* 하위 인라인(-블록) 요소 가운데 정렬 (선택 사항) */
+}
+
+.check-button {
+	display: block; /* 버튼을 블록 레벨 요소로 변경 */
+	margin: 10px auto 0 auto; /* 위, 아래 마진 및 좌우 auto */
+	width: fit-content; /* 내용에 맞게 너비 조정 (선택 사항) */
+}
+</style>
+</head>
+<body>
+	<header>
+		<div id="header"></div>
+	</header>
+	<main>
+		<div class="container">
+            <h5 id="test-messege" class="mt-3">1000를 입력하세요.</h5>
+            <div id="puzzle-contents" class="puzzle-place">
+                <img id="puzzleImg" class="w-100">
+                <div id="puzzleContent"></div>
+            </div>
+			<div id="number-container">
+				<div class="number-group">
+					<button class="btn btn-sm move-button up-button" data-index="0">▲</button>
+					<div class="number-display">0</div>
+					<button class="btn btn-sm move-button down-button" data-index="0">▼</button>
+				</div>
+				<div class="number-group">
+					<button class="btn btn-sm move-button up-button" data-index="1">▲</button>
+					<div class="number-display">0</div>
+					<button class="btn btn-sm move-button down-button" data-index="1">▼</button>
+				</div>
+				<div class="number-group">
+					<button class="btn btn-sm move-button up-button" data-index="2">▲</button>
+					<div class="number-display">0</div>
+					<button class="btn btn-sm move-button down-button" data-index="2">▼</button>
+				</div>
+				<div class="number-group">
+					<button class="btn btn-sm move-button up-button" data-index="3">▲</button>
+					<div class="number-display">0</div>
+					<button class="btn btn-sm move-button down-button" data-index="3">▼</button>
+				</div>
+			</div>
+			<div id="result" class="mt-3"></div>
+		</div>
+	</main>
+    <footer>
+		<div id="footer"></div>
+    </footer>
+	<div id="exciting"></div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+  	<script src="../../js/playComm.js"></script>
+	<script type="text/javascript">
+
+        fetch("../layout/header.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("header").innerHTML = data;
+			initHeader();
+          });
+        fetch("../layout/footer.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("footer").innerHTML = data;
+          });
+        fetch("../layout/exciting.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("exciting").innerHTML = data;
+          });
+
+		var isAnswerCorrect = false; // 정답 맞추면 true
+		/**
+		 * 각 숫자 그룹의 위/아래 버튼에 이벤트 핸들러를 설정하는 함수
+		 * @param {HTMLElement} groupElement - 숫자 그룹 요소 (jQuery 객체)
+		 */
+		function setupNumberGroup(groupElement) {
+			const upButton = $(groupElement).find(".up-button");
+			const downButton = $(groupElement).find(".down-button");
+			const numberDisplay = $(groupElement).find(".number-display");
+			let currentValue = parseInt(numberDisplay.text());
+
+			upButton.on("click", function() {
+				if(isAnswerCorrect){
+					return;
+				}
+				currentValue = (currentValue + 1) % 10;
+				numberDisplay.text(currentValue);
+				checkCurrentSolution();
+			});
+
+			downButton.on("click", function() {
+				if(isAnswerCorrect){
+					return;
+				}
+				currentValue = (currentValue - 1 + 10) % 10;
+				numberDisplay.text(currentValue);
+				checkCurrentSolution();
+			});
+		}
+
+		// 확인버튼 클릭
+// 		function clickCheckButton(numberGroups) {
+		function checkCurrentSolution() {
+			if(isAnswerCorrect){
+				return;
+			}
+			let enteredPassword = "";
+			numberGroups.each(function(){
+				enteredPassword += $(this).find(".number-display").text();
+			});
+			const correctPassword = '1000';
+			const resultDiv = $("#result");
+			if (checkTestMode()) { // 테스트 모드인 경우
+				if (enteredPassword === correctPassword) {
+					setSuccess();
+// 				} else {
+// 					resultDiv.removeClass("alert-success").addClass("alert-danger").text("틀렸습니다. 다시 시도하세요.").slideDown();
+				}
+			} else {
+				var check = checkSolution(enteredPassword);
+				if (check) {
+					setSuccess();
+// 					setTimeout(() => {
+// 						goExcitingPage();
+// 					}, 1000);
+					setTimeout(() => {
+						showExciting();
+					}, 1000);
+					
+// 				} else {
+// 					resultDiv.removeClass("alert-success").addClass("alert-danger").text("틀렸습니다. 다시 시도하세요.").slideDown();
+				}
+			}
+		}
+		
+		// 성공 했을 때 실행
+		function setSuccess(){
+			$("#result").removeClass("alert-danger").addClass("alert-success").text("정답입니다!").slideDown();
+			isAnswerCorrect = true;
+			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
+
+			var currentStage = getGameStage();
+			if(currentStage % 2 === 0){
+				$("#number-container").css({"background-image": "url(../../img/lock/lock_02_off.png)"});
+			}else{
+				$("#number-container").css({"background-image": "url(../../img/lock/lock_06_off.png)"});
+			}
+		}
+
+		var numberGroups;
+		$(document).ready(function() {
+            
+        	if (!checkTestMode()) { // 테스트 모드가 아닌 경우
+                $('#test-messege').hide();
+                $('#beforeButton').hide();
+            }else{
+                $('#test-messege').show();
+                $('#puzzle-contents').hide();
+        	}
+
+			$(".move-button").on("mouseup mouseleave",
+                function() {
+                    $(this).removeClass("active");
+                });
+
+			numberGroups = $("#number-container .number-group");
+
+			numberGroups.each(function() {
+				setupNumberGroup(this);
+			});
+
+			//             const checkButton = $("<button class='btn btn-primary mt-3 mx-auto'>확인</button>");
+			//             $("#number-container").after(checkButton);
+
+// 			const checkButton = $("<button class='btn btn-primary mt-3'>확인</button>");
+			const beforeButton = $("<button class='btn btn-secondary ms-2 mt-3'>이전</button>");
+			const buttonContainer = $(
+					"<div class='text-center mt-3'></div>")
+// 					.append(checkButton); // 감싸는 div 생성 및 text-center 클래스 적용
+					
+			if(checkTestMode()){ // 테스트모드에는 이전버튼 추가
+				buttonContainer.append(beforeButton);
+			}
+			$("#number-container").after(buttonContainer);
+
+// 			checkButton.on("click", function() {
+// 				clickCheckButton(numberGroups);
+// 			});
+			beforeButton.on("click", function() {
+            	location.href = 'LockTest.html';
+			});
+			setChangeLockImg();
+		});
+		
+		function setChangeLockImg(){
+			var currentStage = getGameStage();
+			if(currentStage % 2 === 0){
+				$("#number-container").css("background-image", "url('../../img/lock/lock_02_on.png')");
+			}else{
+				$("#number-container").css("background-image", "url('../../img/lock/lock_06_on.png')");
+			}
+		}
+	</script>
+</body>
+</html>

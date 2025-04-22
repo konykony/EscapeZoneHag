@@ -10,7 +10,7 @@
 	<style type="text/css">
 		body { /* 또는 배경 이미지를 적용할 요소 */
 			height: 100vh; /* 뷰포트 높이의 100% */
-			background-image: url(img/0505/backgroundImg.jpg);
+			background-image: url(../img/0505/backgroundImg.jpg);
 			background-size: cover; /* 이미지를 요소에 맞춰 확대/축소하여 채움 */
 			background-position: center; /* 이미지를 가운데 정렬 */
 			margin: 0; 
@@ -51,14 +51,20 @@
             <button class="btn btn-secondary btn-lg btn-block btn-lock-test">자물쇠</button>
         </div>
 	</div>  	
-    <script src="../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
-    <script src="../lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
-    <script src="../js/cookieManage.js"></script>
-    <script src="../js/jsonManage.js"></script>
-    <script src="../js/common.js"></script>
-    <script src="../js/jsonData/0505.js"></script>
+	<div id="scripts"></div>
+	<script src="../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../js/cookieManage.js"></script>
+	<script src="../js/jsonManage.js"></script>
+	<script src="../js/common.js"></script>
+	<script src="../js/jsonData/0505.js"></script>
    	<script type="text/javascript">
+		fetch("layout/scripts.html")
+			.then(res => res.text())
+			.then(data => {
+				document.getElementById("scripts").innerHTML = data;
+		}).catch(error => console.error("Error loading script:", error));
 	   	$(document).ready(function() {
 	   		$('.btn-start').click(function() {
 	   			onClickStart();
@@ -159,7 +165,7 @@
 	   	
 	   	// 자물쇠 테스트
 	   	function onClickLockTest(){
-	   		location.href = '../pages/Play/LockTest.jsp';
+	   		location.href = '../pages/play/lockTest.html';
 	   	}
 	</script>
 </body>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"> 
+    <title>EscapeZone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../../css/common.css" />
+	<link rel="stylesheet" href="../../css/head.css" />
+	<style>
+        .lock-container {
+/*             background-color: #3498db; */
+/*             padding: 20px; */
+/*             border-radius: 10px; */
+            text-align: center;
+            background-image: url('/img/0505/map/map.png');
+			background-repeat: no-repeat;
+			background-size: contain;
+			padding:99px 40px 0;
+			width: 300px;
+			height: 340px;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .image-button {
+            width: 45px;
+            height: 45px;
+/*             border-radius: 8px; */
+            border: none;
+            cursor: pointer;
+/*             background-color: #f0f0f0; */
+			background: none;
+            outline: none;
+            padding: 0;
+        }
+        .image-button img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .image-button.active {
+/*             opacity: 0.7; /* 활성화 시 약간 투명하게 표시하여 시각적 피드백 */ */
+        }
+        #answer-input {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 150px;
+            text-align: center;
+            display: none;
+        }
+        #result-message {
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+		<div id="header"></div>
+    </header>
+	<main>
+        <h5 class="mt-3">지도에서 공, 종이비행기, 자동차를 누르세요</h5>
+        <div id="puzzle-contents" class="puzzle-place">
+            <img id="puzzleImg" class="w-100">
+            <div id="puzzleContent"></div>
+        </div>
+		<div class="container">
+		    <div class="row justify-content-center">
+		        <div class="col-md-6 lock-container">
+		            <div class="button-grid" id="buttonGrid"></div>
+		        </div>
+		    </div>
+		</div>
+        <div id="result-message"></div>
+        <input type="text" id="answer-input" class="form-control" placeholder="선택된 이미지 인덱스 (예: 0,2,7)">
+	    <div class='text-center mt-3'>
+            <button id="beforeButton" class="btn btn-secondary ms-2">이전</button>
+	    </div>
+	</main>
+    <footer>
+		<div id="footer"></div>
+    </footer>
+	<div id="exciting"></div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+  	<script src="../../js/playComm.js"></script>
+	<script type="text/javascript">
+
+        fetch("../layout/header.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("header").innerHTML = data;
+			initHeader();
+          });
+        fetch("../layout/footer.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("footer").innerHTML = data;
+          });
+        fetch("../layout/exciting.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("exciting").innerHTML = data;
+          });
+          
+		var isAnswerCorrect = false; // 정답 맞추면 true
+		let activeFilenames = [];
+	    const correctAnswer = 'btn_airplane_on.png,btn_ball_on.png,btn_car_on.png'; // 정답 파일명 (쉼표로 구분된 문자열)
+	    const imageFilenames = [
+	        'btn_ball_off.png', 'btn_balloon_off.png', 'btn_cookie_off.png', 'btn_puzzle_off.png',
+	        'btn_airplane_off.png', 'btn_candy_off.png', 'btn_robot_off.png', 'btn_pencil_off.png',
+	        'btn_car_off.png', 'btn_lollipop_off.png', 'btn_book_off.png', 'btn_bear_off.png'
+	    ]; // 각 버튼에 해당하는 이미지 파일명 배열
+	    const imagePathPrefix = '/img/0505/map/'; // 이미지 파일 경로
+
+	    function checkAnswer() {
+	        const enteredAnswer = $("#answer-input").val();
+
+        	if (checkTestMode()) { // 테스트 모드인 경우
+	        if (enteredAnswer === correctAnswer) {
+    			setSuccess();
+// 	            $("#result-message").text("정답입니다!").removeClass("alert-danger").addClass("alert-success");
+	        }
+        	}else{
+        		var check = checkSolution(enteredAnswer);
+        		if (check) {
+        			setSuccess();
+					setTimeout(() => {
+// 						goExcitingPage();
+						showExciting();
+					}, 1000);
+				}
+        	}
+	    }
+		
+		// 성공 했을 때 실행
+		function setSuccess(){
+			$("#result-message").text("정답입니다!").removeClass("alert-danger").addClass("alert-success");
+// 			$(".lock-container").css({"background-image": "url(/img/lock/lock_02_off.png)"});
+			isAnswerCorrect = true;
+			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
+		}
+
+	    function handleButtonClick() {
+			if(isAnswerCorrect){
+				return;
+			}
+			playButtonClickSound(); // 자물쇠 버튼 클릭하면 소리 재생
+	        const index = $(this).data('index');
+	        const filename = imageFilenames[index];
+	        const imgElement = $(this).find('img');
+	        const isActive = $(this).hasClass('active');
+// 	        const filenameWithoutExt = filename.split('.')[0];
+	        const filenameWithoutExt = filename.replace("_off","_on");
+
+	        $(this).toggleClass('active');
+
+	        if (isActive) {
+	            imgElement.attr('src', imagePathPrefix + filename); // off 시 원래 이미지
+	            activeFilenames = activeFilenames.filter(item => item !== filenameWithoutExt);
+	        } else {
+// 	            imgElement.attr('src', imagePathPrefix + filenameWithoutExt + '_on.png'); // on 시 _on 이미지
+	            imgElement.attr('src', imagePathPrefix + filenameWithoutExt); // on 시 _on 이미지
+	            if (!activeFilenames.includes(filenameWithoutExt)) {
+	                activeFilenames.push(filenameWithoutExt);
+	            }
+	        }
+
+	        $("#answer-input").val(activeFilenames.sort().join(','));
+	        checkAnswer();
+	    }
+
+	    $(document).ready(function() {
+	        const buttonGrid = $("#buttonGrid");
+
+	        for (let i = 0; i < imageFilenames.length; i++) {
+	            const filename = imageFilenames[i];
+	            const imagePath = imagePathPrefix + filename;
+// 	            const button = $(`<button class="image-button" data-index="${i}"><img src="${imagePath}" alt="${i + 1}"></button>`);
+	            const button = $('<button class="image-button" data-index="' + i + '"><img src="' + imagePath + '" alt="' + i+1 + '"></button>');
+	            button.on('click', handleButtonClick); // 이벤트 리스너를 외부 함수에 연결
+	            buttonGrid.append(button);
+	        }
+
+	        $("#answer-input").on('input', checkAnswer); // 텍스트 입력 변경 시 정답 확인
+
+            
+            $("#beforeButton").on("click", function() {
+            	location.href = 'LockTest.html';
+            });
+	    });
+	</script>
+</body>
+</html>

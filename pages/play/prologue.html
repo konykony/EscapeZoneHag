@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프롤로그</title>
+<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="../../css/common.css" />
+<style>
+body {
+	/*             background-color: #f8f9fa; */
+	color: #343a40;
+}
+
+.container {
+	max-width: 800px;
+	margin-top: 30px;
+	background-color: #fff;
+	padding: 30px;
+	border-radius: 10px;
+	/*             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+h1 {
+	color: #0d6efd;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.prologue {
+	font-size: 1.1em;
+	color: #6c757d;
+	white-space: pre-line;
+}
+
+.start-button {
+	display: block;
+	width: 200px;
+	margin: 30px auto 0;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1 class="mb-4">프롤로그</h1>
+<!-- 		<div class="prologue mb-4">매년 입춘이면 따스한 햇살과 함께 봄의 기운이 찾아오는 작은 마을. -->
+<!-- 			하지만 올해는 이상하게도 봄이 오지 않았습니다. 차가운 바람만이 마을을 감싸고, 사람들은 불안에 떨고 있습니다. 마을 -->
+<!-- 			사람들은 입춘의 기운이 사라진 이유를 찾기 위해 노력했지만, 아무것도 알아내지 못했습니다. 절망에 빠진 마을 사람들은 마지막 -->
+<!-- 			희망을 걸고 당신에게 도움을 요청합니다. 당신은 오래전부터 전해져 내려오는 '봄의 조율사'의 후예입니다. 당신은 사라진 봄의 -->
+<!-- 			기운을 되찾을 수 있는 특별한 능력을 가지고 있습니다. 마을 사람들의 간절한 염원을 담아, 당신은 사라진 입춘의 기운을 찾아 -->
+<!-- 			떠나는 여정을 시작합니다. 당신 앞에는 입춘의 기운을 되찾기 위한 다양한 퍼즐과 숨겨진 이야기들이 기다리고 있습니다. 과연 -->
+<!-- 			당신은 사라진 입춘의 비밀을 밝혀내고, 다시 한번 마을에 따스한 봄을 가져다줄 수 있을까요?</div> -->
+			<div class="prologue mb-4">
+				깊은 숲속 작은 마을에 헨젤과 그레텔 남매가 살고 있었어요.
+
+				헨젤은 평범해 보였지만 사실은 마력이 풍부한 아이였고, 그 사실은 마녀만이 알아챘어요.
+				
+				마녀는 헨젤의 마력을 빼앗기 위해 새엄마로 변신해 집 안 어딘가에 진짜 새엄마를 가두고,
+				그레텔이 외출하고 아빠가 집을 비운 틈을 타 헨젤을 유인해 납치 했죠.
+				
+				하지만 눈치 빠른 헨젤은 마녀의 정체를 간파하고,
+				자신의 방에 편지와 단서들을 숨겨둔 채 사라졌어요.
+				
+				이제, 그레텔은 오빠를 구하기 위해 집 안과 숲, 마녀의 집을 모험하며
+				마법을 풀고 진실을 밝혀야 해요.
+			</div>
+		<div class="d-grid gap-2 col-6 mx-auto">
+			<a href="#" class="btn btn-primary btn-lg btn-start">여정 시작</a>
+		</div>
+	</div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.btn-start').click(function() {
+				clickBtnStart();
+			});
+			var currentStage = getGameStage();
+			if (isNaN(currentStage) || currentStage > 0) {
+				goErrorPage();
+			}
+		});
+		
+		function clickBtnStart(){
+			var currentStage = getGameStage();
+			if(!isNaN(currentStage) && currentStage == 0){
+				goNextPage();
+			}else{
+				goErrorPage();
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"> 
+    <title>EscapeZone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../../css/common.css" />
+	<link rel="stylesheet" href="../../css/head.css" />
+	<style>
+        body {
+/*             font-family: sans-serif; */
+/*             display: flex; */
+/*             flex-direction: column; */
+            align-items: center;
+/*             padding-top: 50px; */
+/*             background-color: #f8f9fa; */
+        }
+        
+        #puzzleImg{width: 100%;}
+
+        .lock-container__ {
+            background-color: #e67e22; /* 이미지 배경색과 유사하게 */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+		.lock-container {
+			width: 200px;
+			height: 320px;
+			background-image: url(../../img/lock/lock_03_on.png);
+			background-repeat: no-repeat;
+			background-size: contain;
+            padding: 115px 30px 0;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+		}
+
+        .letter-row {
+            display: flex;
+            align-items: center;
+/*             margin-bottom: 15px; */
+        }
+
+        .arrow-button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            padding: 5px 10px;
+            cursor: pointer;
+            outline: none;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .letter-box {
+            background-color: white;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em;
+            margin: 0 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+		<div id="header"></div>
+    </header>
+	<main>
+		<h5 id="test-messege" class="mt-3">테스트를 입력하세요.</h5>
+		<div id="puzzle-contents" class="puzzle-place">
+			<img id="puzzleImg" class="w-100">
+			<div id="puzzleContent"></div>
+		</div>
+		<div class="lock-container mx-auto mt-3">
+	        <div class="letter-row">
+	            <button class="arrow-button left-arrow">&lt;</button>
+	            <div class="letter-box" data-index="0"></div>
+	            <button class="arrow-button right-arrow">&gt;</button>
+	        </div>
+	        <div class="letter-row">
+	            <button class="arrow-button left-arrow">&lt;</button>
+	            <div class="letter-box" data-index="1"></div>
+	            <button class="arrow-button right-arrow">&gt;</button>
+	        </div>
+	        <div class="letter-row">
+	            <button class="arrow-button left-arrow">&lt;</button>
+	            <div class="letter-box" data-index="2"></div>
+	            <button class="arrow-button right-arrow">&gt;</button>
+	        </div>
+	        <div class="letter-row">
+	            <button class="arrow-button left-arrow">&lt;</button>
+	            <div class="letter-box" data-index="3"></div>
+	            <button class="arrow-button right-arrow">&gt;</button>
+	        </div>
+	    </div>
+	    <div class='text-center mt-3'>
+            <button id="beforeButton" class="btn btn-secondary ms-2 mt-3">이전</button>
+		</div>
+        <div id="message"></div>
+	</main>
+    <footer>
+		<div id="footer"></div>
+    </footer>
+	<div id="exciting"></div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+  	<script src="../../js/playComm.js"></script>
+	<script type="text/javascript">
+
+        fetch("../layout/header.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("header").innerHTML = data;
+			initHeader();
+          });
+        fetch("../layout/footer.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("footer").innerHTML = data;
+          });
+        fetch("../layout/exciting.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("exciting").innerHTML = data;
+          });
+          
+        var answer = "TEST";
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var isAnswerCorrect = false; // 정답 맞추면 true
+        let letterBoxes;
+        let currentLetters = ['', '', '', ''];
+        let messageDiv;
+
+        function getRandomLetters(correctLetter) {
+            let letters = [correctLetter];
+            while (letters.length < 10) {
+                const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if (!letters.includes(randomLetter)) {
+                    letters.push(randomLetter);
+                }
+            }
+            for (let i = letters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [letters[i], letters[j]] = [letters[j], letters[i]];
+            }
+            return letters;
+        }
+
+        function updateLetterBox(arrowButton) {
+            const letterBox = $(arrowButton).siblings(".letter-box");
+            const letters = letterBox.data('letters');
+            let currentIndex = letterBox.data('currentIndex');
+
+            if ($(arrowButton).hasClass("left-arrow")) {
+                currentIndex = (currentIndex - 1 + letters.length) % letters.length;
+            } else {
+                currentIndex = (currentIndex + 1) % letters.length;
+            }
+
+            letterBox.data('currentIndex', currentIndex);
+            letterBox.text(letters[currentIndex]);
+            currentLetters[letterBox.data('index')] = letters[currentIndex];
+        }
+
+        // 확인버튼 클릭
+//         function onClickCheckbutton() {
+        function checkAnswer() {
+        	if (checkTestMode()) { // 테스트 모드인 경우
+	            if (currentLetters.join('') === answer) {
+	            	setSuccess();
+	                // 여기에 정답 시 이벤트 처리 코드 작성
+	            } else {
+// 	                messageDiv.text("틀렸습니다. 다시 시도하세요.").css('color', 'red');
+	                // 여기에 오답 시 이벤트 처리 코드 작성
+	            }
+			} else {
+				var check = checkSolution(currentLetters.join(''));
+				if (check) {
+					setSuccess();
+					setTimeout(() => {
+// 						goExcitingPage();
+						showExciting();
+					}, 1000);
+				} else {
+// 	                messageDiv.text("틀렸습니다. 다시 시도하세요.").css('color', 'red');
+				}
+			}
+        }
+		
+		// 성공 했을 때 실행
+		function setSuccess(){
+			messageDiv.text("정답입니다!").css('color', 'green');
+            $(".lock-container").css({"background-image": "url(../../img/lock/lock_03_off.png)"});
+			isAnswerCorrect = true;
+			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
+		}
+
+        $(document).ready(function() {
+        	
+        	if (!checkTestMode()) { // 테스트 모드가 아닌 경우
+        		answer = getSolution();
+                $('#test-messege').hide();
+                $('#beforeButton').hide();
+            }else{
+                $('#test-messege').show();
+                $('#puzzle-contents').hide();
+        	}
+        	
+            letterBoxes = $(".letter-box");
+            messageDiv = $("#message");
+            letterBoxes.each(function(index) {
+                const letters = getRandomLetters(answer[index]);
+                $(this).data('letters', letters);
+
+                let initialIndex;
+                do {
+                    initialIndex = Math.floor(Math.random() * 10);
+                } while (letters[initialIndex] === answer[index]);
+
+                $(this).data('currentIndex', initialIndex);
+                $(this).text(letters[initialIndex]);
+                currentLetters[index] = letters[initialIndex];
+            });
+
+            $(".arrow-button").on("click", function() {
+				if(isAnswerCorrect == true){
+					return;            	
+				}
+				playButtonClickSound(); // 자물쇠 버튼 클릭하면 소리 재생
+                updateLetterBox(this);
+                checkAnswer();
+            });
+
+//             $("#checkButton").on("click", function() {
+//                 onClickCheckbutton();
+//             });
+            
+            $("#beforeButton").on("click", function() {
+            	location.href = 'LockTest.html';
+            });
+        });
+    </script>
+</body>
+</html>

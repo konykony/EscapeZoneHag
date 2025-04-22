@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>통과</title>
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<style>
+		body {
+            background-color: #f8f9fa;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .play-time {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .total-time-label {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .description {
+            color: #343a40;
+            font-size: 0.9rem;
+  white-space: pre-wrap;
+  text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+	<div class="container">
+        <h2 class="mb-3" id="title">내 기록</h2>
+        <div class="play-time"></div>
+<!--         <div class="total-time-label"> -->
+<!--             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16"> -->
+<!--                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l4 2.356a.5.5 0 0 0 .496-.868L8 8.5V3.5z"/> -->
+<!--             </svg> -->
+<!--             총 시간 -->
+<!--         </div> -->
+        <div class="description">그레텔과 헨젤은 포털을 통해 집으로 돌아왔어요.
+진짜 새엄마는 마법에서 풀려났고, 아빠도 두 남매를 따뜻하게 맞아주었죠.
+마녀의 마법은 풀려 과자의 집에 갇힌 아이들도 모두 집으로 돌아갈 수 있었어요.
+그날 이후, 헨젤과 그레텔의 용기는 마을에서 오랫동안 전해지는 전설이 되었답니다.
+그리고 숲속의 마법은 다시 조용히 잠들었어요…
+이야기끝!
+		</div>
+    </div>
+
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+	<script type="text/javascript">
+	  	$(document).ready(function() {
+	  	    const currentTime = getEndTime() - getStartTime();
+	  	    $(".play-time").text(timeToString(currentTime));
+  	  		if(getEndTimeCookie() == null){
+  	  			goErrorPage();
+  	  		}
+  			$('#title').text(getUserName() + '님의 기록');
+	  	});
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>자물쇠 테스트</title>
+	<link rel="stylesheet" href="../../lib/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+	<style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+/*             margin-bottom: 30px; */
+            color: #343a40;
+            margin: 30px 0 50px;
+        }
+
+        .lock-button {
+            background-color: #206c99; /* 이미지 버튼 색상과 유사하게 */
+            color: white;
+            padding: 15px 30px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            width: 300px; /* 이미지 버튼 너비와 유사하게 */
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        
+        #before{
+        	background-color:#6c757d;
+        }
+
+        .lock-button:hover {
+            background-color: #1a5276;
+        }
+
+/*         #event-message { */
+/*             margin-top: 30px; */
+/*             font-size: 1.1em; */
+/*             color: #555; */
+/*             text-align: center; */
+/*         } */
+    </style>
+</head>
+<body>
+	<h1>자물쇠 테스트</h1>
+
+    <button id="textLock" class="lock-button">글자 입력 자물쇠</button>
+    <button id="numberLock" class="lock-button">숫자 입력 자물쇠</button>
+    <button id="alphabetLock" class="lock-button">영문 입력 자물쇠</button>
+    <button id="directionLock" class="lock-button">방향 자물쇠</button>
+    <button id="mapLock" class="lock-button">지도 자물쇠</button>
+    <button id="before" class="lock-button">이전 페이지</button>
+	<div id="scripts"></div>
+	<script src="../../lib/jquery/dist/jquery.min.js"></script>
+	<script src="../../lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+	<script src="../../js/cookieManage.js"></script>
+	<script src="../../js/jsonManage.js"></script>
+	<script src="../../js/common.js"></script>
+	<script src="../../js/jsonData/0505.js"></script>
+
+  	<script>
+		fetch("../layout/scripts.html")
+			.then(res => res.text())
+			.then(data => {
+				document.getElementById("scripts").innerHTML = data;
+		}).catch(error => console.error("Error loading script:", error));
+        $(document).ready(function() {
+            $("#textLock").click(function() {
+//                 $("#event-message").text("글자 입력 자물쇠 버튼이 클릭되었습니다.");
+                // 여기에 숫자 입력 자물쇠 관련 이벤트 처리 코드 작성
+                location.href = '../../pages/play/inputText.html?mode=test';
+            });
+            $("#numberLock").click(function() {
+//                 $("#event-message").text("숫자 입력 자물쇠 버튼이 클릭되었습니다.");
+                // 여기에 숫자 입력 자물쇠 관련 이벤트 처리 코드 작성
+                location.href = '../../pages/play/inputNumber.html?mode=test';
+            });
+
+            $("#alphabetLock").click(function() {
+//                 $("#event-message").text("영문 입력 자물쇠 버튼이 클릭되었습니다.");
+                // 여기에 영문 입력 자물쇠 관련 이벤트 처리 코드 작성
+                location.href = '../../pages/play/inputAlphabet.html?mode=test';
+            });
+
+            $("#directionLock").click(function() {
+//                 $("#event-message").text("방향 자물쇠 버튼이 클릭되었습니다.");
+                // 여기에 방향 자물쇠 관련 이벤트 처리 코드 작성
+                location.href = '../../pages/play/inputDirection.html?mode=test';
+            });
+
+            $("#mapLock").click(function() {
+//                 $("#event-message").text("지도 자물쇠 버튼이 클릭되었습니다.");
+                // 여기에 지도 자물쇠 관련 이벤트 처리 코드 작성
+                location.href = '../../pages/play/inputMap.html?mode=test';
+            });
+            $("#before").click(function() {
+                location.href = '../start.html';
+            });
+        });
+    </script>
+</body>
+</html>

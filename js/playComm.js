@@ -1,7 +1,3 @@
-/**
- * 스탑워치 구현
- */
-
 let startTime = Date.now(); // 페이지 로드 시 시작 시간 기록
 
 $(document).ready(function() {
@@ -27,7 +23,7 @@ $(document).ready(function() {
 		});
 	
 		$('#userNameLink').click(function(){ // 이름 버튼 클릭
-			location.href = "/Index.jsp";
+			location.href = "../start.html";
 		});
 	}else{ // 테스트모드 인 경우
 		$('header').hide();
@@ -150,17 +146,13 @@ function checkUserPage() {
 		return true;
 	}
 	if(getEndTimeCookie() != null){ // 게임이 끝난 경우
-		location.href = "/Page/Play/Final.jsp"
-//	}else if(!isCurrentPage("Prologue.jsp") && getStartTimeCookie() == null){ // 현재 프롤로그 페이지가 아닌데 시작 한 적이 없는 경우(접속 url 잘못 입력)
+		location.href = "/pages/play/Final.html";
 	}else if(isNaN(getStartTime()) || getStartTimeCookie() == null){ // 시작 한 적이 없는 경우(접속 url 잘못 입력)
 		goErrorPage();
 	}
 	var currentStage = getGameStage();
 	var currentPuzzle = getPuzzleData(currentStage);
-//	if (isCurrentPage("Prologue.jsp") && currentStage != 0) { // 현재 프롤로그 페이지인데 0스테이지가 아닌 경우
-//		goErrorPage();
-//	} else 
-	if (currentPuzzle != null && !isCurrentPage("index.jsp")) {
+	if (currentPuzzle != null && !isCurrentPage("start.html")) {
 		var currentPuzzle = getPuzzleData(currentStage);
 		if (currentPuzzle.stage != currentStage) {
 			goErrorPage();
@@ -170,7 +162,9 @@ function checkUserPage() {
 
 // 페이지 테스트 인지 확인
 function checkTestMode(){
-	const mode = $('#testMode').attr('data-param-value');
+	const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+	// const mode = $('#testMode').attr('data-param-value');
 	if(mode != null && mode == "test"){
 		return true;
 	}else{
@@ -191,4 +185,73 @@ function playButtonClickSound(){
 		console.error('오디오 재생 실패:', error);
 		// 사용자에게 재생 버튼을 표시하거나, 오류 메시지를 보여줄 수 있습니다.
 	});
+}
+
+
+const imageCount = 11;
+var randomIndex = Math.floor(Math.random() * imageCount) + 1;
+	
+function showExciting(){
+	$("#exciting").show();
+	$("header").hide();
+	$("main").hide();
+	$("footer").hide();
+	$("#div-exciting").css({
+		"display" : "flex",
+		"justify-content" : "center",
+		"align-items" : "center",
+		"min-height" : "100vh",
+	});
+	$("#div-exciting").show();
+
+	showRandomImageAndRedirect();
+}
+
+function getRandomImageSource() {
+	return "../../img/exciting/play_" + randomIndex + '.gif';
+}
+
+function getRandomSoundSource() {
+	return "../../sound/sound_" + randomIndex + '.mp3';
+}
+
+function setSoundIndex() {
+	
+}
+
+function showRandomImageAndRedirect() {
+	var randomImageSrc = getRandomImageSource();
+	$('#random-image').attr('src', randomImageSrc);
+	var randomAudioSrc = getRandomSoundSource();
+// 		$('#exciting-audio source')[0].attr('src', randomAudioSrc);
+//         $('#exciting-audio')[0].play();
+	
+	var audio = new Audio(randomAudioSrc); // 재생할 오디오 파일 경로를 지정합니다.
+
+ // 2. 재생 시작
+	audio.play().then(() => {
+	 // 재생이 성공적으로 시작되었을 때 실행할 코드 (선택 사항)
+		console.log('오디오 재생 시작!');
+   })
+	.catch((error) => {
+	 // 재생이 실패했을 때 실행할 코드 (주로 자동 재생 정책 위반)
+		console.error('오디오 재생 실패:', error);
+	 // 사용자에게 재생 버튼을 표시하거나, 오류 메시지를 보여줄 수 있습니다.
+   });
+
+	setTimeout(function() {
+		if (!checkTestMode()) { // 테스트 모드가 아닌 경우
+			goNextPage();
+		}
+	}, 2000);
+}
+
+// fetch header load된 다음 실행
+function initHeader(){
+	$('#userNameLink').text(getUserName() + '님');
+	
+	$('#userNameLink').click(function(){ // 이름 버튼 클릭
+		location.href = "../start.html";
+	});
+	setUserStageInfo();
 }

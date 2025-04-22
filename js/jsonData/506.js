@@ -8,7 +8,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "입춘",
 			"hiddenPlace" : "책장을 살펴보세요",
-			"lock": "InputText.jsp",
+			"lock": "InputText.html",
 			"imgUrl" : "/img/0505/puzzle01.png"
       },
       {
@@ -16,7 +16,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "아지랑이",
 			"hiddenPlace" : "책상 아래를 살펴보세요",
-			"lock": "InputText.jsp",
+			"lock": "InputText.html",
 			"imgUrl" : "/img/0505/puzzle02.png"
 		},
 		{
@@ -24,7 +24,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": "병아리",
 			"hiddenPlace" : "냉장고를 열어 보세요",
-			"lock": "InputText.jsp"			,
+			"lock": "InputText.html"			,
 			"imgUrl" : "/img/0505/puzzle03.png"
 		},
 	]
