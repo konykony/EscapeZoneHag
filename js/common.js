@@ -41,12 +41,12 @@ function goCurrentPage() {
 	var currentPuzzle = getPuzzleData(currentStage);
 	if (currentStage == 0) { // 프롤로그 페이지로 이동
 		// location.href = getProloguePage();
-		location.href = "/pages/play/prologue.html"
+		location.href = "prologue.html"
 	} else if (currentStage > getPuzzleDataLength()) {// 마지막 퍼즐을 마친 경우
-		location.href = "/pages/play/final.html"
+		location.href = "final.html"
 	} else if (currentPuzzle != null) {
 		setGameStage(currentStage);
-		location.href = "/pages/play/" + currentPuzzle.lock;
+		location.href = currentPuzzle.lock;
 	}
 }
 
@@ -61,11 +61,11 @@ function goNextPage() {
 	var nextStage = currentStage + 1;
 	var nextPuzzle = getPuzzleData(nextStage);
 	if (nextStage > getPuzzleDataLength()) {// 마지막 퍼즐을 마친 경우
-		location.href = "/pages/play/Final.html"
+		location.href = "final.html"
 		setEndTime();
 	} else if (nextPuzzle != null) {
 		setGameStage(nextStage);
-		location.href = "/pages/play/" + nextPuzzle.lock;
+		location.href = nextPuzzle.lock;
 	}
 }
 
@@ -75,17 +75,17 @@ function goExcitingPage() {
 	var nextStage = currentStage + 1;
 	var nextPuzzle = getPuzzleData(nextStage);
 	if (nextStage > getPuzzleDataLength()) {// 마지막 퍼즐을 마친 경우
-		location.href = "/pages/play/final.html"
+		location.href = "final.html"
 		setEndTime();
 	} else if (nextPuzzle != null) {
 		setGameStage(nextStage);
-		location.href = "/Page/Play/Exciting.html";
+		location.href = "exciting.html";
 	}
 }
 
 // 잘못된 접근 페이지
 function goErrorPage() {
-	location.href = "/pages/play/error.html";
+	location.href = "error.html";
 }
 
 // 내 기록 조회 페이지 주소 얻기
@@ -95,7 +95,7 @@ function getFinalPage() {
 
 // 프롤로그 페이지 주소 얻기
 function getProloguePage() {
-	return "/prologue.html";
+	return "prologue.html";
 }
 
 // 팝업 열기 함수
