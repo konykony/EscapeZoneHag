@@ -251,7 +251,7 @@ function initHeader(){
 	$('#userNameLink').text(getUserName() + '님');
 	
 	$('#userNameLink').click(function(){ // 이름 버튼 클릭
-		location.href = "../start.html";
+		location.href = "start.html";
 	});
 	setUserStageInfo();
 }
