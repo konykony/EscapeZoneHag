@@ -214,7 +214,7 @@
 		// 성공 했을 때 실행
 		function setSuccess(){
 			messageDiv.text("정답입니다!").css('color', 'green');
-            $(".lock-container").css({"background-image": "url(../../img/lock/lock_03_off.png)"});
+            $(".lock-container").css({"background-image": "url(../../img/lock/lock_03_off.png)"}).fadeIn(100);
 			isAnswerCorrect = true;
 			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
 		}

@@ -161,7 +161,7 @@
 
 	      resultMessage.removeClass('alert-success alert-danger alert-info').show();
 	      if (isCorrect) {
-				$(".container").css("background-image", "url('../../img/lock/lock_08_off.png')");
+				$(".container").css("background-image", "url('../../img/lock/lock_08_off.png')").fadeIn(100);
 // 	        resultMessage.addClass('alert-success').text("정답입니다!");
 			resultMessage.addClass("alert-success").text("정답입니다!").slideDown();
 	        isAnswerCorrect = true;
