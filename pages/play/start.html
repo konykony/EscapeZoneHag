@@ -140,6 +140,8 @@
 	            if (adminPass == PASS_WORD) {
 	            	initCookieClear(adminPass);
 	            	alert('초기화 되었습니다.');
+					$('.btn-reset').hide();
+					$('.btn-lock-test').show();
 	            	closePopup();
 	            } else if(adminPass != PASS_WORD){
 	            	$('#result-message').text('잘못된 비밀번호입니다.');
