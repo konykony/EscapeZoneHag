@@ -33,7 +33,7 @@ function checkCookieExists(){
 
 // 쿠키에 사용자 이름 추가
 function setUserName(name){
-	Cookies.set('ezUserName', name, { expires: expiresDay });
+	Cookies.set('ezUserName', name, { expires: expiresDay, domain: window.location.hostname });
 }
 
 // 쿠키에서 사용자 이름 가져오기
@@ -43,7 +43,7 @@ function getUserName(){
 
 // 쿠키에 게임 스테이지 추가
 function setGameStage(index){
-	Cookies.set('ezGameStage', index, { expires: expiresDay });
+	Cookies.set('ezGameStage', index, { expires: expiresDay, domain: window.location.hostname });
 }
 
 // 쿠키에서 게임 스테이지 가져오기
@@ -53,7 +53,7 @@ function getGameStage(){
 
 // 쿠키에 게임 시작 시간 추가
 function setStartTime(){
-	Cookies.set('ezStartTime', new Date(), { expires: expiresDay });
+	Cookies.set('ezStartTime', new Date(), { expires: expiresDay, domain: window.location.hostname });
 }
 
 // 쿠키에서 게임 시작 시간 date type으로 변환 하고 가져오기
@@ -70,7 +70,7 @@ return Cookies.get('ezStartTime');
 // 쿠키에 게임 종료 시간 추가
 function setEndTime(){
 	if(isNaN(Cookies.get('ezEndTime'))){
-		Cookies.set('ezEndTime', new Date(), { expires: expiresDay });
+		Cookies.set('ezEndTime', new Date(), { expires: expiresDay, domain: window.location.hostname });
 
 		var currentStage = getGameStage();
 		var nextStage = currentStage + 1;
