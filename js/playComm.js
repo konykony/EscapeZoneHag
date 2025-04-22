@@ -260,3 +260,15 @@ function initFooter(){
 	});
 	$('#popup-close-btn').click(closePopup);
 }
+
+function changeLockImg(obj, newBgIndex){
+	const newBg = "../../img/lock/lock_" +  newBgIndex + "_off.png";
+
+	const img = new Image();
+	img.src = newBg;
+
+	img.onload = function () {
+	// 이미지가 완전히 로드된 후에 바꾸기
+	obj.css("background-image", `url('${newBg}')`);
+	};
+}

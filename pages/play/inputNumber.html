@@ -213,9 +213,11 @@
 
 			var currentStage = getGameStage();
 			if(currentStage % 2 === 0){
-				$("#number-container").css({"background-image": "url(../../img/lock/lock_02_off.png)"}).fadeIn(100);
+				// $("#number-container").css({"background-image": "url(../../img/lock/lock_02_off.png)"}).fadeIn(100);
+				changeLockImg($("#number-container"), "02");
 			}else{
-				$("#number-container").css({"background-image": "url(../../img/lock/lock_06_off.png)"}).fadeIn(100);
+				// $("#number-container").css({"background-image": "url(../../img/lock/lock_06_off.png)"}).fadeIn(100);
+				changeLockImg($("#number-container"), "06");
 			}
 		}
 
