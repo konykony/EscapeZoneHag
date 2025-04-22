@@ -44,9 +44,7 @@
             border-radius: 8px;
             object-fit: cover;
         }
-        .image-button.active {
-/*             opacity: 0.7; /* 활성화 시 약간 투명하게 표시하여 시각적 피드백 */ */
-        }
+
         #answer-input {
             margin-bottom: 10px;
             padding: 8px;
@@ -125,7 +123,7 @@
 	        'btn_airplane_off.png', 'btn_candy_off.png', 'btn_robot_off.png', 'btn_pencil_off.png',
 	        'btn_car_off.png', 'btn_lollipop_off.png', 'btn_book_off.png', 'btn_bear_off.png'
 	    ]; // 각 버튼에 해당하는 이미지 파일명 배열
-	    const imagePathPrefix = '/img/0505/map/'; // 이미지 파일 경로
+	    const imagePathPrefix = '../../img/0505/map/'; // 이미지 파일 경로
 
 	    function checkAnswer() {
 	        const enteredAnswer = $("#answer-input").val();
