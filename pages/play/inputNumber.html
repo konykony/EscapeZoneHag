@@ -175,7 +175,7 @@
 			}
 			
 			playButtonClickSound(); // 자물쇠 버튼 클릭하면 소리 재생
-			
+
 			let enteredPassword = "";
 			numberGroups.each(function(){
 				enteredPassword += $(this).find(".number-display").text();
@@ -213,9 +213,9 @@
 
 			var currentStage = getGameStage();
 			if(currentStage % 2 === 0){
-				$("#number-container").css({"background-image": "url(../../img/lock/lock_02_off.png)"});
+				$("#number-container").css({"background-image": "url(../../img/lock/lock_02_off.png)"}).fadeIn(100);
 			}else{
-				$("#number-container").css({"background-image": "url(../../img/lock/lock_06_off.png)"});
+				$("#number-container").css({"background-image": "url(../../img/lock/lock_06_off.png)"}).fadeIn(100);
 			}
 		}
 
@@ -267,9 +267,9 @@
 		function setChangeLockImg(){
 			var currentStage = getGameStage();
 			if(currentStage % 2 === 0){
-				$("#number-container").css("background-image", "url('../../img/lock/lock_02_on.png')");
+				$("#number-container").css("background-image", "url('../../img/lock/lock_02_on.png')").fadeIn(100);
 			}else{
-				$("#number-container").css("background-image", "url('../../img/lock/lock_06_on.png')");
+				$("#number-container").css("background-image", "url('../../img/lock/lock_06_on.png')").fadeIn(100);
 			}
 		}
 	</script>
