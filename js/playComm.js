@@ -174,7 +174,7 @@ function checkTestMode(){
 
 // 자물쇠 버튼 클릭하면 소리 재생
 function playButtonClickSound(){
-	var audio = new Audio('/sound/mouse_click.mp3'); // 재생할 오디오 파일 경로를 지정합니다.
+	var audio = new Audio('../../sound/mouse_click.mp3'); // 재생할 오디오 파일 경로를 지정합니다.
 
 	// 2. 재생 시작
 	audio.play().then(() => {
