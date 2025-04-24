@@ -87,6 +87,3 @@ img {
 	color: #6c757d;
 }
 
-body{
-	touch-action: pan-y; /* 세로 스크롤만 허용하고 확대/축소 막기 */
-}
