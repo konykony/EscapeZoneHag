@@ -9,7 +9,7 @@ const puzzleData = {
 			"solution": "5692",
 			"content" : "납치된 헨젤의 방에 들어가 단서를 찾으려는 그레텔은, 헨젤이 방 비밀번호를 바꿀 때마다 방문 앞 사진도 함께 바꿔놓는다는 사실을 기억해요. 이번에 바꾼 사진은 머리끝부터 발끝까지 정말 사랑스럽게 찍혀 있답니다. 헨젤의 방 비밀번호는?",
 			"lock": "inputNumber.html",
-			"imgUrl" : "puzzle01.png"
+			"imgUrl" : "../../img/0505/puzzle01.png"
       },
       {
 			"stage": 2,

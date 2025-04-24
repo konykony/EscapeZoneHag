@@ -11,8 +11,8 @@ $(document).ready(function() {
 	//	setInitInput();
 		startTime = getStartTime(); // 페이지 로드 시 시작 시간 기록
 	
-		updateDisplay(); // 1초 딜레이 없애기
-		setInterval(updateDisplay, 1000); // 1초 간격으로 업데이트
+		updateDisplayTime(); // 1초 딜레이 없애기
+		setInterval(updateDisplayTime, 1000); // 1초 간격으로 업데이트
 	
 		$('#userNameLink').click(function(){ // 이름 버튼 클릭
 			location.href = "../start.html";
@@ -70,7 +70,7 @@ function setPuzzleImg(){
 }
 
 // 시계 화면 업데이트
-function updateDisplay() {
+function updateDisplayTime() {
     const currentTime = Date.now() - startTime;
     $("#display").text(timeToString(currentTime));
 }

@@ -133,7 +133,7 @@
 		const messageElement = document.getElementById('message');
 		const correctAnswer = '123'; // 정답을 문자열 형태로 저장
 
-		function updateDisplay() {
+		function updateDisplay2() {
 			for (let i = 0; i < 3; i++) {
 				digitElements[i].textContent = String(digits[i]).padStart(1,
 						'0');
@@ -147,7 +147,7 @@
 			} else if (digits[index] > 9) {
 				digits[index] = 0;
 			}
-			updateDisplay();
+			updateDisplay2();
 			checkAnswer();
 		}
 
@@ -217,7 +217,7 @@
         	}
 
     		// 초기 표시
-    		updateDisplay();
+    		updateDisplay2();
             $("#beforeButton").on("click", function() {
             	location.href = 'lockTest.html';
             });
