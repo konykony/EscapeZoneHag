@@ -4,6 +4,9 @@
 body {
     font-family: 'Google Sans', sans-serif;
 }
+img {
+	touch-action: manipulation; /*더블 탭 제스처로 인한 확대/축소를 방지*/
+  }
 .btn:focus {
 	outline: none;
 	box-shadow: none !important;
