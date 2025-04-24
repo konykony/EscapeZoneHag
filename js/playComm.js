@@ -240,12 +240,31 @@ function showRandomImageAndRedirect() {
 
 // fetch header load된 다음 실행
 function initHeader(){
-	$('#userNameLink').text(getUserName() + '님');
+	// $('#userNameLink').text(getUserName() + '님');
 	
-	$('#userNameLink').click(function(){ // 이름 버튼 클릭
-		location.href = "start.html";
-	});
-	setUserStageInfo();
+	// $('#userNameLink').click(function(){ // 이름 버튼 클릭
+	// 	location.href = "start.html";
+	// });
+	// setUserStageInfo();
+	$('#userNameLink').text(getUserName() + '님');
+	const observer = new MutationObserver((mutationsList, observer) => {
+		for (const mutation of mutationsList) {
+		  if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+			// header 요소의 자식 노드가 추가되었으므로 DOM 업데이트가 완료되었을 가능성이 높음
+			const btnUserName = headerElement.querySelector("#userNameLink");
+			if (btnUserName) {
+				btnUserName.addEventListener("click", function() {
+					location.href = "start.html";
+			  });
+			}
+			setUserStageInfo();
+			observer.disconnect(); // 더 이상 관찰할 필요가 없으면 연결 해제
+			break;
+		  }
+		}
+	  });
+  
+	  observer.observe(headerElement, { childList: true, subtree: true });
 }
 
 // fetch footer load된 다음 실행
