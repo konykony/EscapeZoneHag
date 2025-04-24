@@ -87,3 +87,11 @@ img {
 	color: #6c757d;
 }
 
+body{
+	touch-action: pan-y; /* 세로 스크롤만 허용하고 확대/축소 막기 */
+}
+
+button {
+	all: unset; /* 모든 브라우저 기본 스타일 제거 */
+	-webkit-appearance: none; /* 아이폰, 사파리 기본 스타일 제거 */
+  }

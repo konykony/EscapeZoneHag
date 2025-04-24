@@ -247,6 +247,7 @@ function initHeader(){
 	// });
 	// setUserStageInfo();
 	$('#userNameLink').text(getUserName() + '님');
+    const headerElement = document.getElementById("header");
 	const observer = new MutationObserver((mutationsList, observer) => {
 		for (const mutation of mutationsList) {
 		  if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
@@ -264,7 +265,12 @@ function initHeader(){
 		}
 	  });
   
-	  observer.observe(headerElement, { childList: true, subtree: true });
+	//   observer.observe(headerElement, { childList: true, subtree: true });
+	if (observer) {
+		observer.observe(headerElement, { childList: true, subtree: true });
+	  } else {
+		console.error("Error: MutationObserver instance was not created.");
+	  }
 }
 
 // fetch footer load된 다음 실행
