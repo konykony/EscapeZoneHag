@@ -16,9 +16,9 @@ $(document).ready(function() {
 		updateDisplayTime(); // 1초 딜레이 없애기
 		setInterval(updateDisplayTime, 1000); // 1초 간격으로 업데이트
 	
-		$('#userNameLink').click(function(){ // 이름 버튼 클릭
-			location.href = "../start.html";
-		});
+		// $('#userNameLink').click(function(){ // 이름 버튼 클릭
+		// 	location.href = "start.html";
+		// });
 	}else{ // 테스트모드 인 경우
 		$('header').hide();
 		$('footer').hide();
