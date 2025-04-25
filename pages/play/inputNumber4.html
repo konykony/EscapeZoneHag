@@ -255,7 +255,8 @@
 			// 	changeLockImg($(".lock-container"), "07");
 			// }
 			// $("#result").removeClass("alert-danger").addClass("alert-success").text("정답입니다!").slideDown();
-			$(".lock-container").css("background-image", "url('../../img/lock/lock_07_off.png')").fadeIn(100);
+			// $(".lock-container").css("background-image", "url('../../img/lock/lock_07_off.png')").fadeIn(100);
+			changeLockImg($(".lock-container"), "07");
 			isAnswerCorrect = true;
 			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
 		}
