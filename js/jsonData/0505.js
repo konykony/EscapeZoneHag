@@ -40,7 +40,7 @@ const puzzleData = {
 			"title": "Tom",
 			"solution": 358,
 			"content" : '침대 밑을 살펴보니 봉투가 하나 놓여 있었어요. 토끼가 "이 안에 수수께끼랑 퍼즐이 들어 있어. 퍼즐을 맞추면 마녀의 집 지도를 찾을 수 있어!"라고 말해 주었어요. 봉투 안에는 정말로 수수께끼와 그림이 그려진 퍼즐이 들어 있네요. 퍼즐을 맞춰 상자의 비밀번호를 찾아보세요!',
-			"lock": "inputNumber2.html",
+			"lock": "inputNumber4.html",
 			"imgUrl" : "../../img/0505/puzzle05.png"
 		},
 		{
