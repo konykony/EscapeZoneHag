@@ -14,20 +14,22 @@
   
 	width: 210px;
 	height: 299px;
-	background-image: url(../..//img/lock/lock_05_on.png);
+	background-image: url(../..//img/lock/lock_07_on.png);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row; /* 추가 */
+    padding-top: 120px;
+  }
+
+  .digit-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 150px;
-  }
+    margin: 0 5px;
+}
 
-  .digit-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-  }
-
-  .arrow-button {
+.arrow-up, .arrow-down {
     font-size: 1.5em;
     cursor: pointer;
     color: white;
@@ -37,23 +39,26 @@
     align-items: center;
     width: 30px;
     height: 30px;
-  }
-.arrow-button > i {
+}
+
+.arrow-up > i, .arrow-down > i {
     font-size: 1.5em;
 }
 
-  .digit-display {
-    background-color: white;
-    color: #333;
-    font-size: 1.2em;
-    font-weight: bold;
-    padding: 0px 5px;
-    border-radius: 5px;
-     width: 30px; 
-    text-align: center;
-    margin: 0 10px;
-  }
-
+.digit {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    margin: 5px 0;
+    user-select: none;
+	color: white;
+	border: 1px solid white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.1); /* 파란색 배경, 30% 투명 */
+}
   .message {
     color: white;
     font-size: 18px;
@@ -93,29 +98,22 @@
                 <img id="puzzleImg" class="w-100">
                 <div id="puzzleContent"></div>
             </div>
-			<div class="lock-container mx-auto mt-3">
-				<div class="digit-row">
-					<div class="arrow-button" onclick="changeDigit(0, -1)"><i class="bi bi-caret-left-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(0, -1)">◀</button> -->
-					<div id="digit-0" class="digit-display">0</div>
-					<div class="arrow-button" onclick="changeDigit(0, 1)"><i class="bi bi-caret-right-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(0, 1)">▶</button> -->
+			<div class="lock-container mx-auto">
+				<div class="digit-group">
+					<div class="arrow-up" data-index="0"><i class="bi bi-caret-up-fill"></i></div>
+					<div class="digit" id="digit-1">0</div>
+					<div class="arrow-down" data-index="0"><i class="bi bi-caret-down-fill"></i></div>
 				</div>
-				<div class="digit-row">
-					<div class="arrow-button" onclick="changeDigit(1, -1)"><i class="bi bi-caret-left-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(1, -1)">◀</button> -->
-					<div id="digit-1" class="digit-display">0</div>
-					<div class="arrow-button" onclick="changeDigit(1, 1)"><i class="bi bi-caret-right-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(1, 1)">▶</button> -->
+				<div class="digit-group">
+					<div class="arrow-up" data-index="1"><i class="bi bi-caret-up-fill"></i></div>
+					<div class="digit" id="digit-2">0</div>
+					<div class="arrow-down" data-index="1"><i class="bi bi-caret-down-fill"></i></div>
 				</div>
-				<div class="digit-row">
-					<div class="arrow-button" onclick="changeDigit(2, -1)"><i class="bi bi-caret-left-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(2, -1)">◀</button> -->
-					<div id="digit-2" class="digit-display">0</div>
-					<div class="arrow-button" onclick="changeDigit(2, 1)"><i class="bi bi-caret-right-fill"></i></div>
-					<!-- <button class="arrow-button" onclick="changeDigit(2, 1)">▶</button> -->
+				<div class="digit-group">
+					<div class="arrow-up" data-index="2"><i class="bi bi-caret-up-fill"></i></div>
+					<div class="digit" id="digit-3">0</div>
+					<div class="arrow-down" data-index="2"><i class="bi bi-caret-down-fill"></i></div>
 				</div>
-<!-- 				<div id="message" class="message"></div> -->
 			</div>
 			<div class='text-center mt-3'>
 				<button id="beforeButton" class="btn btn-secondary ms-2 mt-3">이전</button>
@@ -166,29 +164,64 @@
           
 		
 		var isAnswerCorrect = false; // 정답 맞추면 true
-		const digits = [ 0, 0, 0 ];
-		const digitElements = [ document.getElementById('digit-0'),
-				document.getElementById('digit-1'),
-				document.getElementById('digit-2') ];
+		// const digits = [ 0, 0, 0 ];
+		// const digitElements = [ document.getElementById('digit-0'),
+		// 		document.getElementById('digit-1'),
+		// 		document.getElementById('digit-2') ];
 		const messageElement = document.getElementById('message');
 		const correctAnswer = '123'; // 정답을 문자열 형태로 저장
 
-		function updateDisplay2() {
-			for (let i = 0; i < 3; i++) {
-				digitElements[i].textContent = String(digits[i]).padStart(1,
-						'0');
-			}
+		// function updateDisplay2() {
+		// 	for (let i = 0; i < 3; i++) {
+		// 		digitElements[i].textContent = String(digits[i]).padStart(1,
+		// 				'0');
+		// 	}
+		// }
+
+		// function changeDigit(index, direction) {
+		// 	digits[index] += direction;
+		// 	if (digits[index] < 0) {
+		// 		digits[index] = 9;
+		// 	} else if (digits[index] > 9) {
+		// 		digits[index] = 0;
+		// 	}
+		// 	updateDisplay2();
+		// 	checkAnswer();
+		// }
+
+		function updateDigit(index, change) {
+			let currentValue = parseInt($('.digit').eq(index).text());
+			let newValue = (currentValue + change + 10) % 10; // 0~9 순환
+			$('.digit').eq(index).text(newValue);
+			checkCode();
 		}
 
-		function changeDigit(index, direction) {
-			digits[index] += direction;
-			if (digits[index] < 0) {
-				digits[index] = 9;
-			} else if (digits[index] > 9) {
-				digits[index] = 0;
+		function checkCode() {
+			if(isAnswerCorrect){
+				return;
 			}
-			updateDisplay2();
-			checkAnswer();
+			playButtonClickSound(); // 자물쇠 버튼 클릭하면 소리 재생
+			const currentAnswer = $('.digit').map(function() {
+				return $(this).text();
+			}).get().join('');
+
+			// if (currentCode === correctCode) {
+			// 	alert('정답입니다!');
+			// 	// 추가적인 정답 처리 로직 (예: 잠금 해제)
+			// }
+			if (checkTestMode()) { // 테스트 모드인 경우
+	 			if (currentAnswer === correctAnswer) {
+	 				setSuccess();
+	 			}
+			}else{
+				if(checkSolution(currentAnswer)){
+					setSuccess();
+					setTimeout(() => {
+// 						goExcitingPage();
+						showExciting();
+					}, 1000);
+				}
+			}
 		}
 
 		// 정답 확인
@@ -211,36 +244,18 @@
 					}, 1000);
 				}
 			}
-// 			const currentAnswer = digits.map(String).join(''); // 현재 선택된 숫자를 문자열로 합침
-// 			if (currentAnswer === correctAnswer) {
-// 				messageElement.textContent = "정답입니다!";
-// 				messageElement.style.backgroundColor = "green";
-// 				messageElement.style.padding = "10px";
-// 				messageElement.style.borderRadius = "5px";
-// 			} else {
-// 				messageElement.textContent = "다시 시도해보세요.";
-// 				messageElement.style.backgroundColor = "red";
-// 				messageElement.style.padding = "10px";
-// 				messageElement.style.borderRadius = "5px";
-// 			}
 		}
 		
 		// 성공 했을 때 실행
 		function setSuccess(){
-// 			messageElement.textContent = "정답입니다!";
-// 			messageElement.style.backgroundColor = "green";
-// 			messageElement.style.padding = "10px";
-// 			messageElement.style.borderRadius = "5px";
-            $(".lock-container").css("background-image", "url('../../img/lock/lock_05_off.png')").fadeIn(100);
 			// var currentStage = getGameStage();
 			// if(currentStage % 2 === 0){
 			// 	changeLockImg($(".lock-container"), "05");
 			// }else{
-			// 	// $(".lock-container").css("background-image", "url('../../img/lock/lock_07_off.png')").fadeIn(100);
 			// 	changeLockImg($(".lock-container"), "07");
 			// }
-// 			$(".lock-container").css({"background-image": "url(/img/lock/lock_05_off.png)"});
-			$("#result").removeClass("alert-danger").addClass("alert-success").text("정답입니다!").slideDown();
+			// $("#result").removeClass("alert-danger").addClass("alert-success").text("정답입니다!").slideDown();
+			$(".lock-container").css("background-image", "url('../../img/lock/lock_07_off.png')").fadeIn(100);
 			isAnswerCorrect = true;
 			$("#myAudio")[0].play(); // 잠금 풀림 소리 재생
 		}
@@ -256,8 +271,15 @@
                 $('#puzzle-contents').hide();
         	}
 
-    		// 초기 표시
-    		updateDisplay2();
+    		
+			$('.arrow-up').on('click', function() {
+				updateDigit($(this).data('index'), 1);
+			});
+
+			$('.arrow-down').on('click', function() {
+				updateDigit($(this).data('index'), -1);
+			});
+	    	
             $("#beforeButton").on("click", function() {
             	location.href = 'lockTest.html';
             });

@@ -8,6 +8,8 @@ $(document).ready(function() {
 		setHiddenPlace();
 		setPuzzleImg();
 		setInitHintUsed();
+		initHeader();
+		initFooter();
 	//	setInitInput();
 		startTime = getStartTime(); // 페이지 로드 시 시작 시간 기록
 	
@@ -102,20 +104,20 @@ function showHint(hintLevel, obj) {
 		var hintContent = getValueByIndexAndKey(hintConData, currentStage-1, 'hint' + hintLevel);
         if (inputHintCode == hintVal) {
 //        	initCookieClear(adminPass);
-			$('#result-message').text(hintContent);
+			$('#hintcode-message').text(hintContent);
 			$('#popup-title').text(hintLevel + '단계 힌트 조회');
 			$('#content-wrapper p').remove();
 			$('#input-container').remove();
 			setHintUsed(currentHintUsed, currentStage-1,'is' + hintLevel, obj);
 //			closePopup();
         } else if(inputHintCode != hintVal){
-        	$('#result-message').text('잘못된 힌트코드입니다.');
+        	$('#hintcode-message').text('잘못된 힌트코드입니다.');
         } else {
-            $('#result-message').text('힌트코드를 입력해주세요.');
+            $('#hintcode-message').text('힌트코드를 입력해주세요.');
         }
     }
     const eventButton = $('<button>').attr('id', 'event-button').attr('class','btn btn-primary ms-2').text('확인').click(executeEvent);
-    const resultMessage = $('<div id="result-message"></div>');
+    const resultMessage = $('<div id="hintcode-message"></div>');
 
     inputContainer.append(nameInput, eventButton);
     contentWrapper.append(content, inputContainer, resultMessage); // inputContainer를 contentWrapper에 추가
@@ -240,37 +242,37 @@ function showRandomImageAndRedirect() {
 
 // fetch header load된 다음 실행
 function initHeader(){
-	// $('#userNameLink').text(getUserName() + '님');
-	
-	// $('#userNameLink').click(function(){ // 이름 버튼 클릭
-	// 	location.href = "start.html";
-	// });
-	// setUserStageInfo();
 	$('#userNameLink').text(getUserName() + '님');
-    const headerElement = document.getElementById("header");
-	const observer = new MutationObserver((mutationsList, observer) => {
-		for (const mutation of mutationsList) {
-		  if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-			// header 요소의 자식 노드가 추가되었으므로 DOM 업데이트가 완료되었을 가능성이 높음
-			const btnUserName = headerElement.querySelector("#userNameLink");
-			if (btnUserName) {
-				btnUserName.addEventListener("click", function() {
-					location.href = "start.html";
-			  });
-			}
-			setUserStageInfo();
-			observer.disconnect(); // 더 이상 관찰할 필요가 없으면 연결 해제
-			break;
-		  }
-		}
-	  });
+	
+	$('#userNameLink').click(function(){ // 이름 버튼 클릭
+		location.href = "start.html";
+	});
+	setUserStageInfo();
+	// $('#userNameLink').text(getUserName() + '님');
+    // const headerElement = document.getElementById("header");
+	// const observer = new MutationObserver((mutationsList, observer) => {
+	// 	for (const mutation of mutationsList) {
+	// 	  if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+	// 		// header 요소의 자식 노드가 추가되었으므로 DOM 업데이트가 완료되었을 가능성이 높음
+	// 		const btnUserName = headerElement.querySelector("#userNameLink");
+	// 		if (btnUserName) {
+	// 			btnUserName.addEventListener("click", function() {
+	// 				location.href = "start.html";
+	// 		  });
+	// 		}
+	// 		setUserStageInfo();
+	// 		observer.disconnect(); // 더 이상 관찰할 필요가 없으면 연결 해제
+	// 		break;
+	// 	  }
+	// 	}
+	//   });
   
-	//   observer.observe(headerElement, { childList: true, subtree: true });
-	if (observer) {
-		observer.observe(headerElement, { childList: true, subtree: true });
-	  } else {
-		console.error("Error: MutationObserver instance was not created.");
-	  }
+	// //   observer.observe(headerElement, { childList: true, subtree: true });
+	// if (observer) {
+	// 	observer.observe(headerElement, { childList: true, subtree: true });
+	//   } else {
+	// 	console.error("Error: MutationObserver instance was not created.");
+	//   }
 }
 
 // fetch footer load된 다음 실행
