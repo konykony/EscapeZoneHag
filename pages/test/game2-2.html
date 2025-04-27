@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>빛 반사 퍼즐</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 60px);
+            grid-template-rows: repeat(5, 60px);
+            gap: 2px;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 24px;
+            line-height: 60px;
+            cursor: pointer;
+        }
+        .laser {
+            background-color: yellow;
+        }
+        .mirror {
+            background-color: lightblue;
+        }
+        .beam {
+            background-color: orange;
+        }
+    </style>
+</head>
+<body class="container mt-4">
+
+    <h2>🔦 빛 반사 퍼즐</h2>
+
+    <div class="mb-3">
+        <button class="btn btn-primary" id="startLaser">레이저 시작</button>
+        <button class="btn btn-secondary" id="resetGame">새로고침</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        const gridSize = 5;
+        let mirrors;
+        let laserStart;
+
+        function initGame() {
+            mirrors = {
+                "2-2": "/",
+                "3-3": "\\"
+            };
+            laserStart = { x: 0, y: 2, direction: "right" };
+            createGrid();
+        }
+
+        function createGrid() {
+            const $grid = $("#grid").empty();
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cellId = `${x}-${y}`;
+                    const $cell = $("<div>")
+                        .addClass("cell")
+                        .attr("id", cellId);
+
+                    if (mirrors[cellId]) {
+                        $cell.addClass("mirror").text(mirrors[cellId]);
+                        $cell.on("click", function() {
+                            const id = $(this).attr("id");
+                            if (mirrors[id]) {
+                                mirrors[id] = mirrors[id] === "/" ? "\\" : "/";
+                                $(this).text(mirrors[id]);
+                                $(".cell").removeClass("beam");
+                                moveLaser();
+                            }
+                        });
+                    }
+
+                    $grid.append($cell);
+                }
+            }
+
+            $(`#${laserStart.x}-${laserStart.y}`).addClass("laser").text("🔦");
+        }
+
+        function moveLaser() {
+            let x = laserStart.x;
+            let y = laserStart.y;
+            let dir = laserStart.direction;
+
+            function nextPos(x, y, dir) {
+                switch (dir) {
+                    case "up": return { x, y: y - 1 };
+                    case "down": return { x, y: y + 1 };
+                    case "left": return { x: x - 1, y };
+                    case "right": return { x: x + 1, y };
+                }
+            }
+
+            const beamPath = [];
+
+            while (x >= 0 && y >= 0 && x < gridSize && y < gridSize) {
+                const cellId = `${x}-${y}`;
+                if (!(x === laserStart.x && y === laserStart.y)) {
+                    beamPath.push(cellId);
+                }
+
+                const mirror = mirrors[cellId];
+                if (mirror) {
+                    if (mirror === "/") {
+                        dir = { up: "right", right: "up", down: "left", left: "down" }[dir];
+                    } else if (mirror === "\\") {
+                        dir = { up: "left", left: "up", down: "right", right: "down" }[dir];
+                    }
+                }
+
+                const next = nextPos(x, y, dir);
+                x = next.x;
+                y = next.y;
+            }
+
+            for (const id of beamPath) {
+                $(`#${id}`).addClass("beam");
+            }
+        }
+
+        $("#startLaser").click(() => {
+            $(".cell").removeClass("beam");
+            moveLaser();
+        });
+
+        $("#resetGame").click(() => {
+            initGame();
+        });
+
+        initGame();
+    </script>
+
+</body>
+</html>

@@ -286,6 +286,22 @@ function initFooter(){
 		}
 	});
 	$('#popup-close-btn').click(closePopup);
+
+	setStageStartTime();
+
+	// updateHintBtn(); // 힌트 버튼 업데이트
+	// setInterval(updateDisplayTime, 6000); // 1분 간격으로 업데이트
+}
+
+// 힌트 버튼 업데이트트
+function updateHintBtn(){
+	$.each('.hint-area .hint-levels .btn', function(index, element) {
+		var hintLevel = (this).attr("data-hint-level");
+
+		const currentTime = new Date(); // 현재 시간
+		const timeDifferenceMs = currentTime - getStageStartTime(); // 밀리초 단위 차이
+		// if()
+	});
 }
 
 function changeLockImg(obj, newBgIndex){

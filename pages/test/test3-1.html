@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>순서 배열 퍼즐 (jQuery + SortableJS)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js" integrity="sha512-Eezs+g9Lq4TCCq0wae01s97ufKnpuzO+qbMBvr3RnTBDxW/S7zUW0yKLrzcKpkmTCrqcNnxDnnKnlISGprUBdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="libs/Sortable/1.15.6/Sortable.min.js"></script>
+    <style>
+        /* 드래그 가능한 아이템 스타일 */
+        #sortable-container .list-group-item {
+            cursor: grab; /* 잡는 모양 커서 */
+            user-select: none; /* 텍스트 선택 방지 */
+            background-color: #f8f9fa; /* 기본 배경색 */
+            border: 1px solid #dee2e6;
+            margin-bottom: 5px; /* 아이템 간 간격 */
+        }
+
+        /* 드래그 중인 아이템의 원래 자리 스타일 (ghost) */
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: #cce5ff; /* 파란색 배경 */
+        }
+
+        /* 드롭될 위치 스타일 (chosen) - 선택 사항 */
+        .sortable-chosen {
+            background-color: #e9ecef;
+        }
+
+         /* 컨테이너 스타일 */
+        #sortable-container {
+             border: 2px dashed #ccc;
+             padding: 15px;
+             min-height: 100px; /* 최소 높이 */
+             background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">순서 배열 퍼즐</h1>
+        <p>아래 아이템들을 올바른 순서(예: 역사적 사건, 과정 등)로 배열하고 확인 버튼을 누르세요.</p>
+        <p><strong>힌트:</strong> 정답 순서는 "아이템 3", "아이템 1", "아이템 4", "아이템 2" 입니다.</p>
+
+        <div id="sortable-container" class="list-group mb-3">
+            <div class="list-group-item list-group-item-action" data-id="item1">아이템 1 (과일: 사과)</div>
+            <div class="list-group-item list-group-item-action" data-id="item2">아이템 2 (과일: 포도)</div>
+            <div class="list-group-item list-group-item-action" data-id="item3">아이템 3 (과일: 바나나)</div>
+            <div class="list-group-item list-group-item-action" data-id="item4">아이템 4 (과일: 오렌지)</div>
+        </div>
+
+        <div class="d-flex gap-2">
+             <button id="check-button" class="btn btn-primary">순서 확인</button>
+             <button id="reset-button" class="btn btn-secondary">초기화</button>
+        </div>
+
+        <div id="feedback" class="mt-3"></div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const sortableContainer = document.getElementById('sortable-container');
+            const feedbackDiv = $('#feedback');
+            const checkButton = $('#check-button');
+            const resetButton = $('#reset-button');
+
+            // --- 정답 순서 정의 ---
+            // 각 아이템의 data-id 값을 올바른 순서대로 배열
+            const correctOrder = ['item3', 'item1', 'item4', 'item2'];
+
+            // --- 초기 아이템 순서 저장 (초기화용) ---
+            const initialHtml = sortableContainer.innerHTML;
+            let sortableInstance = null; // Sortable 인스턴스 저장 변수
+
+            // --- SortableJS 초기화 함수 ---
+            function initializeSortable() {
+                // 기존 인스턴스가 있으면 파괴
+                if (sortableInstance) {
+                    sortableInstance.destroy();
+                }
+                // SortableJS 적용
+                sortableInstance = new Sortable(sortableContainer, {
+                    animation: 150, // 이동 애니메이션 속도 (ms)
+                    ghostClass: 'sortable-ghost', // 드래그 중 원래 자리에 표시될 클래스
+                    chosenClass: 'sortable-chosen', // 사용자가 선택한 아이템 클래스 (선택 사항)
+                    // forceFallback: true, // 모바일 등에서 드래그 이슈 있을 때 사용 고려
+                });
+            }
+
+            // --- 피드백 표시 함수 ---
+            function displayFeedback(message, type) {
+                // type: 'success' 또는 'danger' (Bootstrap alert 클래스)
+                const alertClass = `alert alert-${type}`;
+                feedbackDiv.html(`<div class="${alertClass}" role="alert">${message}</div>`);
+            }
+
+            // --- 순서 확인 버튼 클릭 이벤트 ---
+            checkButton.on('click', function() {
+                // 현재 아이템 순서 가져오기
+                const currentOrder = [];
+                $(sortableContainer).find('.list-group-item').each(function() {
+                    currentOrder.push($(this).data('id'));
+                });
+
+                // console.log('Current Order:', currentOrder); // 디버깅용
+
+                // 정답과 비교 (배열 내용을 문자열로 변환하여 비교하는 것이 간단)
+                if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+                    displayFeedback('<strong>성공!</strong> 올바른 순서입니다.', 'success');
+                } else {
+                    displayFeedback('<strong>실패!</strong> 순서가 맞지 않습니다. 다시 시도해보세요.', 'danger');
+                }
+            });
+
+            // --- 초기화 버튼 클릭 이벤트 ---
+            resetButton.on('click', function() {
+                // 저장된 초기 HTML로 컨테이너 내용 복원
+                sortableContainer.innerHTML = initialHtml;
+                // 피드백 메시지 제거
+                feedbackDiv.empty();
+                // SortableJS 재초기화 (DOM이 변경되었으므로 필수)
+                initializeSortable();
+                console.log('퍼즐이 초기화되었습니다.');
+            });
+
+            // --- 페이지 로드 시 SortableJS 초기화 ---
+            initializeSortable();
+        });
+    </script>
+
+</body>
+</html>

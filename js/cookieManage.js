@@ -16,6 +16,11 @@ function initCookieClear(password){
 		Cookies.remove('ezStartTime', { domain: domain });
 		Cookies.remove('ezEndTime', { domain: domain });
 		Cookies.remove('ezHintData', { domain: domain });
+
+		var currentStage = getGameStage();
+		puzzleData.puzzle.forEach(element => {
+			Cookies.remove('ezStage' + currentStage + 'StartTime', { domain: domain });
+		});
 		return true;
 	}else{
 		return false;
@@ -87,4 +92,28 @@ const cookie = getEndTimeCookie();
 // 쿠키에서 게임 종료 시간 쿠키 값 그대로 가져오기
 function getEndTimeCookie(){
 	return Cookies.get('ezEndTime'); 
+}
+
+// 스테이지 시작시간 추가
+function setStageStartTime(){
+	if(getStageStartTimeCookie() == null){
+		setStageStartTimeCookie();
+	}
+}
+// 스테이지 시작시간 추가
+function setStageStartTimeCookie(){
+	var currentStage = getGameStage();
+	Cookies.set('ezStage' + currentStage + 'StartTime', new Date(), { expires: expiresDay, domain: window.location.hostname });
+}
+
+// 쿠키에서 스테이지 시작시간 date type으로 변환 하고 가져오기
+function getStageStartTime(){
+const cookie = getStageStartTimeCookie();
+	return new Date(cookie); 
+}
+
+// 스테이지 시작시간 쿠키 값 그대로 가져오기
+function getStageStartTimeCookie(){
+	var currentStage = getGameStage();
+	return Cookies.get('ezStage' + currentStage + 'StartTime');
 }
