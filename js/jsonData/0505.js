@@ -109,25 +109,6 @@ const puzzleData = {
 };
 
 
-//const hintNumData = {
-//	"hint": [
-//		{
-//			"is1" : "N",
-//			"is2" : "N",
-//			"is3" : "N",
-//		},
-//		{
-//			"is1" : "N",
-//			"is2" : "N",
-//			"is3" : "N",
-//		},
-//		{
-//			"is1" : "N",
-//			"is2" : "N",
-//			"is3" : "N",
-//		},
-//	]
-//};
 const hintConData = {
 	"hint": [
 		{

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>장수탕 선녀님 퍼즐</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+  <style>
+    body {
+      /* background-color: #e6f7ff; */
+      padding: 20px;
+    }
+    .puzzle-container {
+      display: grid;
+      gap: 2px;
+      max-width: 95vw;
+      margin: 0 auto;
+    }
+    .piece-wrapper {
+      position: relative;
+      background-color: #ddd;
+      border: 1px solid #ccc;
+      overflow: hidden;
+    }
+    .piece-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: grab;
+      user-select: none;
+    }
+    @media (max-width: 768px) {
+      .piece-wrapper {
+        width: auto;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container text-center">
+  <h2 class="mb-2">장수탕 선녀님 퍼즐 맞추기</h2>
+  <!-- <div class="mb-3">
+    <span id="sizeInfo" class="badge bg-info fs-6"></span>
+  </div> -->
+  <div class="puzzle-container" id="puzzle"></div>
+  <!-- <button class="btn btn-primary mt-4" id="resetBtn">퍼즐 섞기</button> -->
+</div>
+
+<script>
+$(function() {
+  let rows = 5;   // 세로 칸 수 (마음대로 수정 가능)
+  let cols = 4;   // 가로 칸 수 (마음대로 수정 가능)
+  let puzzleArr = [];
+
+  function initPuzzleArr() {
+    puzzleArr = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        puzzleArr.push({
+          correctRow: r,
+          correctCol: c,
+          src: `game5-image/picture-${r}-${c}.png`
+        });
+      }
+    }
+  }
+
+  function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
+
+  function renderPuzzle() {
+    $("#puzzle").empty();
+    $("#puzzle").css("grid-template-columns", `repeat(${cols}, 1fr)`);
+    puzzleArr.forEach((piece, idx) => {
+      const wrapper = $('<div class="piece-wrapper"></div>').attr('data-idx', idx);
+      const img = $('<img class="puzzle-piece">').attr('src', piece.src);
+      wrapper.append(img);
+      $("#puzzle").append(wrapper);
+    });
+    makeDraggable();
+  }
+
+  function makeDraggable() {
+    $(".piece-wrapper").draggable({
+      revert: "invalid",
+      zIndex: 1000,
+      containment: "body",
+      start: function(event, ui) {
+        $(this).css("z-index", 1000);
+      },
+      stop: function(event, ui) {
+        $(this).css("z-index", "");
+      }
+    });
+
+    $(".piece-wrapper").droppable({
+      accept: ".piece-wrapper",
+      drop: function(event, ui) {
+        const fromIdx = parseInt(ui.draggable.attr("data-idx"));
+        const toIdx = parseInt($(this).attr("data-idx"));
+
+        // 퍼즐 데이터 교환
+        [puzzleArr[fromIdx], puzzleArr[toIdx]] = [puzzleArr[toIdx], puzzleArr[fromIdx]];
+
+        renderPuzzle();
+        checkCompletion();
+      }
+    });
+  }
+
+  function checkCompletion() {
+    let correct = true;
+    for (let idx = 0; idx < puzzleArr.length; idx++) {
+      const piece = puzzleArr[idx];
+      const correctIndex = piece.correctRow * cols + piece.correctCol;
+      if (idx !== correctIndex) {
+        correct = false;
+        break;
+      }
+    }
+    if (correct) {
+      setTimeout(() => {
+        alert("🎉 퍼즐 완성! 정말 대단해요!");
+      }, 100);
+    }
+  }
+
+//   $("#resetBtn").click(function() {
+//     doShuffle();
+//   });
+
+  function doShuffle() {
+    initPuzzleArr();
+    shuffle(puzzleArr);
+
+    // 최소 1개 이상 틀리게 섞기
+    while (puzzleArr.every((p, idx) => p.correctRow * cols + p.correctCol === idx)) {
+      shuffle(puzzleArr);
+    }
+    renderPuzzle();
+    // updateSizeInfo();
+  }
+
+//   function updateSizeInfo() {
+//     $("#sizeInfo").text(`가로 ${cols}칸 × 세로 ${rows}칸`);
+//   }
+
+  // 최초 시작
+  doShuffle();
+});
+</script>
+
+</body>
+</html>

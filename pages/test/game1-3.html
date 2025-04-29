@@ -1,80 +1,128 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🌲 숲속 미로 퍼즐</title>
-    <style>
-        body {
-            font-family: 'Garamond', serif;
-            background-color: #f0f8ff;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 { margin-bottom: 10px; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(5, 60px);
-            grid-gap: 2px;
-            margin: 20px auto;
-            width: max-content;
-        }
-        .cell {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-        .start { background-color: #228B22; color: white; }
-        .goal { background-color: #B22222; color: white; }
-        .path { background-color: #fff; }
-        .visited { background-color: #ADD8E6; }
-        .trap-revealed { background-color: darkred; color: white; }
-        #timer, #status {
-            font-size: 1.1rem;
-            margin: 10px 0;
-        }
-        button {
-            padding: 8px 16px;
-            font-size: 1rem;
-            background-color: #228B22;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2e8b57;
-        }
-        @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: repeat(3, 60px);
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌲 숲속 미로 퍼즐</title>
+  <style>
+    body {
+      font-family: 'Garamond', serif;
+      background-color: #f0f8ff;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      /* grid-gap: 2px; */
+      margin: 20px auto;
+      width: max-content;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .start {
+      background-color: #228B22;
+      color: white;
+    }
+
+    .goal {
+      background-color: #B22222;
+      color: white;
+    }
+
+    .path {
+      background-color: #fff;
+    }
+
+    .visited {
+      background-color: #ADD8E6;
+    }
+
+    .trap-revealed {
+      background-color: darkred;
+      color: white;
+    }
+
+    #timer, #status {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 6px 12px;
+      font-size: 0.95rem;
+      background-color: #228B22;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2e8b57;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(5, 48px);
+      }
+
+      .cell {
+        width: 48px;
+        height: 48px;
+        font-size: 0.9rem;
+      }
+
+      button {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<h1>🌲 숲속의 미로 퍼즐</h1>
-<p>늑대의 은신처(G)까지 도달하세요! 함정은 보이지 않지만 조심하세요.</p>
-<div id="timer">⏱ 남은 시간: 60초</div>
-<div class="grid" id="maze"></div>
-<p id="status"></p>
-<button onclick="location.reload()">🔁 새로 시작하기</button>
+  <h1>🌲 숲속의 미로 퍼즐</h1>
+  <p>늑대의 은신처(G)까지 도달하세요! 함정은 보이지 않지만 조심하세요.</p>
+  <div id="timer">⏱ 남은 시간: 60초</div>
+  <div class="grid" id="maze"></div>
+  <p id="status"></p>
+  <button onclick="location.reload()">🔁 새로 시작하기</button>
+  <a href="main.html">이전</a>
 
-<audio id="move-sound" src="jump09.mp3"></audio> <audio id="trap-sound" src="game_explosion2.mp3"></audio> <audio id="win-sound" src="fanfare1.mp3"></audio> <script>
+  <audio id="move-sound" src="jump09.mp3"></audio>
+  <audio id="trap-sound" src="game_explosion2.mp3"></audio>
+  <audio id="win-sound" src="fanfare1.mp3"></audio>
+
+  <script>
     const maze = [
-        [2, 1, 0, 1, 0],
-        [0, 1, 0, 1, 3],
-        [0, 0, 0, 1, 0],
-        [1, 0, 1, 1, 0],
-        [0, 0, 0, 0, 0],
+      [2, 1, 0, 1, 0],
+      [0, 1, 0, 1, 3],
+      [0, 0, 0, 1, 0],
+      [1, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0],
     ];
 
     const grid = document.getElementById("maze");
@@ -91,83 +139,86 @@
     let timer;
 
     function startTimer() {
-        timer = setInterval(() => {
-            if (gameOver) return;
-            timeLeft--;
-            timerDisplay.textContent = `⏱ 남은 시간: ${timeLeft}초`;
-            if (timeLeft <= 0) {
-                gameOver = true;
-                status.textContent = "⏳ 시간이 초과되었습니다! 게임 오버!";
-                clearInterval(timer);
-            }
-        }, 1000);
+      timer = setInterval(() => {
+        if (gameOver) return;
+        timeLeft--;
+        timerDisplay.textContent = `⏱ 남은 시간: ${timeLeft}초`;
+        if (timeLeft <= 0) {
+          gameOver = true;
+          status.textContent = "⏳ 시간이 초과되었습니다! 게임 오버!";
+          clearInterval(timer);
+        }
+      }, 1000);
     }
 
     function renderGrid() {
-        grid.innerHTML = "";
-        for (let y = 0; y < 5; y++) {
-            for (let x = 0; x < 5; x++) {
-                const cell = document.createElement("div");
-                cell.classList.add("cell");
+      grid.innerHTML = "";
+      for (let y = 0; y < 5; y++) {
+        for (let x = 0; x < 5; x++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
 
-                const value = maze[y][x];
-                if (value === 2) {
-                    cell.textContent = "S";
-                    cell.classList.add("start");
-                } else if (value === 3) {
-                    cell.textContent = "G";
-                    cell.classList.add("goal");
-                } else {
-                    cell.classList.add("path");
-                }
+          const value = maze[y][x];
+          if (value === 2) {
+            cell.textContent = "S";
+            cell.classList.add("start");
+          } else if (value === 3) {
+            cell.textContent = "G";
+            cell.classList.add("goal");
+          } else {
+            cell.classList.add("path");
+          }
 
-                cell.dataset.x = x;
-                cell.dataset.y = y;
-                grid.appendChild(cell);
-            }
+          cell.dataset.x = x;
+          cell.dataset.y = y;
+          grid.appendChild(cell);
         }
+      }
     }
 
     function handleCellClick(cell) {
-        if (gameOver) return;
-        const x = parseInt(cell.dataset.x);
-        const y = parseInt(cell.dataset.y);
-        const dx = Math.abs(x - currentPos[0]);
-        const dy = Math.abs(y - currentPos[1]);
-        if ((dx + dy) !== 1) return;
+      if (gameOver) return;
+      const x = parseInt(cell.dataset.x);
+      const y = parseInt(cell.dataset.y);
+      const dx = Math.abs(x - currentPos[0]);
+      const dy = Math.abs(y - currentPos[1]);
+      if ((dx + dy) !== 1) return;
 
-        const value = maze[y][x];
+      const value = maze[y][x];
 
-        if (value === 1) {
-            trapSound.play();
-            cell.classList.remove("path");
-            cell.classList.add("trap-revealed");
-            status.textContent = "💥 함정을 밟았습니다! 게임 오버!";
-            gameOver = true;
-            clearInterval(timer);
-        } else if (value === 3) {
-            winSound.play();
-            cell.classList.add("visited");
-            status.textContent = "🎉 성공! 늑대의 은신처에 도달했습니다!";
-            gameOver = true;
-            clearInterval(timer);
-        } else {
-            moveSound.play();
-            cell.classList.add("visited");
-            currentPos = [x, y];
-        }
+      if (value === 1) {
+        trapSound.play();
+        cell.classList.remove("path");
+        cell.classList.add("trap-revealed");
+        status.textContent = "💥 함정을 밟았습니다! 게임 오버!";
+        gameOver = true;
+        clearInterval(timer);
+      } else if (value === 3) {
+        winSound.play();
+        cell.classList.add("visited");
+        status.textContent = "🎉 성공! 늑대의 은신처에 도달했습니다!";
+        gameOver = true;
+        clearInterval(timer);
+      } else {
+        // moveSound.play();
+        moveSound.pause();         // 중지
+        moveSound.currentTime = 0; // 재생 위치를 처음으로
+        moveSound.play();          // 다시 재생
+        cell.classList.add("visited");
+        currentPos = [x, y];
+      }
     }
 
     function setupGame() {
-        renderGrid();
-        startTimer();
-        document.querySelectorAll(".cell").forEach(cell => {
-            cell.addEventListener("click", () => handleCellClick(cell));
-        });
+      renderGrid();
+      startTimer();
+      document.querySelectorAll(".cell").forEach(cell => {
+        cell.addEventListener("click", () => handleCellClick(cell));
+      });
     }
 
     setupGame();
-</script>
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>캐비넷 수건 퍼즐</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+  <style>
+    .towel {
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+      border-radius: 10px;
+      cursor: move;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+    }
+    .cabinet {
+      width: 70px;
+      height: 140px;
+      border: 2px solid #333;
+      margin: 5px;
+      position: relative;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .cabinet-number {
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    .slot {
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    @media (max-width: 768px) {
+      .towel {
+        width: 50px;
+        height: 50px;
+        font-size: 12px;
+      }
+      .cabinet {
+        width: 60px;
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body class="p-3">
+
+  <h4>🛁 수건을 캐비넷에 넣어주세요!</h4>
+
+  <!-- 수건 진열대 -->
+  <div id="towel-area" class="d-flex flex-wrap mb-4">
+    <div class="towel" style="background-color: red;" data-color="빨강">빨</div>
+    <div class="towel" style="background-color: orange;" data-color="주황">주</div>
+    <div class="towel" style="background-color: yellow; color: black;" data-color="노랑">노</div>
+    <div class="towel" style="background-color: green;" data-color="초록">초</div>
+    <div class="towel" style="background-color: blue;" data-color="파랑">파</div>
+    <div class="towel" style="background-color: navy;" data-color="남색">남</div>
+    <div class="towel" style="background-color: purple;" data-color="보라">보</div>
+  </div>
+
+  <!-- 캐비넷 -->
+  <div id="cabinet-area" class="d-flex mb-4">
+    <div class="cabinet" data-index="0">
+      <div class="cabinet-number">1</div>
+      <div class="slot"></div>
+    </div>
+    <div class="cabinet" data-index="1">
+      <div class="cabinet-number">2</div>
+      <div class="slot"></div>
+    </div>
+    <div class="cabinet" data-index="2">
+      <div class="cabinet-number">3</div>
+      <div class="slot"></div>
+    </div>
+    <div class="cabinet" data-index="3">
+      <div class="cabinet-number">4</div>
+      <div class="slot"></div>
+    </div>
+  </div>
+
+  <!-- 버튼 & 결과 -->
+  <div class="mb-4">
+    <button id="reset-button" class="btn btn-secondary">초기화</button>
+  </div>
+  <div id="result" class="text-primary"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+  <script>
+    // const answer = ["빨강", "초록", "파랑", "보라"]; // 정답 순서
+    const answer = ["파랑", "보라", "노랑", "초록"]; // 정답 순서
+    let placed = [null, null, null, null];
+    const testMode = false; // true로 하면 정답이 미리 채워짐
+
+    $(function() {
+      // 수건 드래그 가능
+      $(".towel").draggable({
+        revert: "invalid",
+        helper: "clone",
+        appendTo: "body",
+        containment: "window",
+        scroll: false
+      });
+
+      // 캐비넷 드롭 가능
+      $(".slot").droppable({
+        accept: ".towel",
+        drop: function(event, ui) {
+          const color = ui.draggable.data("color");
+          const $cabinet = $(this).parent();
+          const idx = $cabinet.data("index");
+
+          // 이미 그 수건이 다른 캐비넷에 들어가있는지 체크
+          if (placed.includes(color)) {
+            alert("같은 색 수건은 여러 캐비넷에 둘 수 없습니다!");
+            return;
+          }
+
+          // 기존 수건 삭제 후 넣기
+          $(this).empty();
+          const newTowel = ui.draggable.clone();
+          newTowel.css({top: 0, left: 0, position: "relative", margin: 0, cursor: "pointer"});
+          $(this).append(newTowel);
+
+          placed[idx] = color;
+          checkResult();
+        }
+      });
+
+      // 캐비넷 안 수건 클릭 시 삭제
+      $(document).on('click', '.slot .towel', function() {
+        const $cabinet = $(this).closest('.cabinet');
+        const idx = $cabinet.data('index');
+        placed[idx] = null;
+        $(this).remove();
+        $("#result").empty();
+      });
+
+      // 초기화 버튼
+      $("#reset-button").click(function() {
+        $(".slot").empty();
+        placed = [null, null, null, null];
+        $("#result").empty();
+      });
+
+      // 테스트모드일 때 정답 수건 채우기
+      if (testMode) {
+        $(".cabinet").each(function(i) {
+          if (answer[i]) {
+            const $slot = $(this).find('.slot');
+            const towelColor = answer[i];
+            const $towel = $("<div>").addClass("towel").css("background-color", colorMap(towelColor)).data("color", towelColor).text(towelColor[0]);
+            $towel.css({top: 0, left: 0, position: "relative", margin: 0, cursor: "pointer"});
+            $slot.append($towel);
+            placed[i] = towelColor;
+          }
+        });
+        checkResult();
+      }
+    });
+
+    // 결과 체크
+    function checkResult() {
+      if (placed.every(p => p !== null)) {
+        let colorMatch = 0;
+        let exactMatch = 0;
+
+        let answerColors = [...answer];
+
+        placed.forEach((color, idx) => {
+          if (answerColors.includes(color)) {
+            colorMatch++;
+          }
+          if (answer[idx] === color) {
+            exactMatch++;
+          }
+        });
+
+        $("#result").html(`
+          색상만 맞춘 수건: ${colorMatch}개<br>
+          색상과 위치 모두 맞춘 수건: ${exactMatch}개
+        `);
+      } else {
+        $("#result").empty();
+      }
+    }
+
+    // 색상 이름을 CSS 색으로 매핑
+    function colorMap(name) {
+      const map = {
+        "빨강": "red",
+        "주황": "orange",
+        "노랑": "yellow",
+        "초록": "green",
+        "파랑": "blue",
+        "남색": "navy",
+        "보라": "purple"
+      };
+      return map[name] || "gray";
+    }
+  </script>
+
+</body>
+</html>

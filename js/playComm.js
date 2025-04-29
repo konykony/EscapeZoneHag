@@ -3,27 +3,63 @@ let startTime = Date.now(); // 페이지 로드 시 시작 시간 기록
 $(document).ready(function() {
 	if(!checkTestMode()){ // 테스트모드가 아닌 경우
 		checkUserPage(); // 현재 페이지 확인
-		$('#userNameLink').text(getUserName() + '님');
-		setUserStageInfo();
-		setHiddenPlace();
 		setPuzzleImg();
-		setInitHintUsed();
 		initHeader();
 		initFooter();
-	//	setInitInput();
-		startTime = getStartTime(); // 페이지 로드 시 시작 시간 기록
-	
-		updateDisplayTime(); // 1초 딜레이 없애기
-		setInterval(updateDisplayTime, 1000); // 1초 간격으로 업데이트
-	
-		// $('#userNameLink').click(function(){ // 이름 버튼 클릭
-		// 	location.href = "start.html";
+		setInitHintUsed();
+		initExciting();
+		// setJsonDataScript(function(){ // 스크립트가 로드 된 후 실행
 		// });
 	}else{ // 테스트모드 인 경우
 		$('header').hide();
 		$('footer').hide();
 	}
 });
+
+
+function appendScripts(scriptSrc, callback){
+	var script = document.createElement('script');
+	script.src = scriptSrc;
+	script.type = 'text/javascript';
+	script.async = true;  // 비동기적으로 로드
+
+	// 문서의 <head> 태그에 <script> 태그를 추가
+	document.head.appendChild(script);
+
+	// 로드가 완료된 후 실행할 작업
+	script.onload = function() {
+		console.log(scriptSrc + '가 로드되었습니다!');
+		callback();
+	};
+
+	// 오류 발생 시 실행할 작업
+	script.onerror = function() {
+		console.error(scriptSrc + ' 스크립트를 로드하는 중 오류가 발생했습니다.');
+	};
+}
+
+// jsonData script 추가하기
+function setJsonDataScript(callback){
+	// URL 파라미터에서 'script' 값을 읽어옵니다.
+    var urlParams = new URLSearchParams(window.location.search);
+    var scriptParam = urlParams.get('script');  // 예: ?script=0505
+
+    // 기본적으로 로드할 스크립트 경로 설정
+    var scriptPath = '';
+
+    // URL 파라미터 값에 따라 로드할 스크립트를 결정
+    if (scriptParam === 'hansel') {
+        scriptPath = '../../js/jsonData/hansel.js';
+    } else if (scriptParam === '0605') {
+        scriptPath = '../../js/jsonData/0605.js';
+    } else if (scriptParam === '0705') {
+        scriptPath = '../../js/jsonData/0705.js';
+    } else {
+        scriptPath = '../../js/jsonData/hansel.js';  // 기본 스크립트 경로
+    }
+    
+	appendScripts(scriptPath, callback);
+}
 
 // 정답 입력창에 포커스가 있으면 footer 숨기기
 function setInitInput(){
@@ -48,12 +84,12 @@ function setUserStageInfo(){
 	$('#stageNum').text(currentStage + "번 문제");
 }
 
-// QR코드 숨겨진 장소
-function setHiddenPlace(){
-//	$('#hiddenPlace').text(getHiddenPlace());
-	const puzzle = getCurrentPuzzleData();
-	$('#hiddenPlace').text(puzzle.hiddenPlace);
-}
+// // QR코드 숨겨진 장소
+// function setHiddenPlace(){
+// //	$('#hiddenPlace').text(getHiddenPlace());
+// 	const puzzle = getCurrentPuzzleData();
+// 	$('#hiddenPlace').text(puzzle.hiddenPlace);
+// }
 
 // 퍼즐 이미지
 function setPuzzleImg(){
@@ -181,10 +217,22 @@ function playButtonClickSound(){
 	});
 }
 
+function initExciting(){
+	const excitingHtml = `
+            <div id="div-exciting">
+				<div id="image-container">
+					<img id="random-image" src="" alt="랜덤 이미지">
+				</div>
+			</div>
+        `;
+	$("#exciting").append(excitingHtml);
+}
+
 
 const imageCount = 11;
 var randomIndex = Math.floor(Math.random() * imageCount) + 1;
-	
+
+// 스테이지 끝나고 신나는 이미지 보여주기	
 function showExciting(){
 	$("#exciting").show();
 	$("header").hide();
@@ -210,7 +258,6 @@ function getRandomSoundSource() {
 }
 
 function setSoundIndex() {
-	
 }
 
 function showRandomImageAndRedirect() {
@@ -242,42 +289,74 @@ function showRandomImageAndRedirect() {
 
 // fetch header load된 다음 실행
 function initHeader(){
+	const headerHtml = `
+		<div class="top-bar">
+            <div id="userNameLink" class="user-name">사용자 이름</div>
+        </div>
+        <div class="remaining-time-box">
+            <label class="timelabel">플레이 시간</label>
+            <!-- <div class="time" id="display">00:00:00</div> -->
+          <div class="time" id="display"></div>
+        </div>
+		<div class="progress mb-3">
+                <div id="gameProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    0%
+                </div>
+            </div>
+        <div id="stageNum" class="question-info"></div>
+        <audio id="myAudio" style="display: none;">
+          <source src="../../sound/unlock.mp3" type="audio/mpeg">
+        </audio>
+        <div id="popup-overlay">
+            <div id="popup-content">
+                <span id="popup-close-btn" class="close-button">&times;</span>
+                <h4 id="popup-title"></h4>
+                <hr/>
+                <div id="popup-inner-content"></div>
+            </div>
+        </div>
+        `;
+	$("header").append(headerHtml);
+	initHeaderEvents();
+}
+
+// header event 실행
+function initHeaderEvents(){
 	$('#userNameLink').text(getUserName() + '님');
 	
 	$('#userNameLink').click(function(){ // 이름 버튼 클릭
 		location.href = "start.html";
 	});
 	setUserStageInfo();
-	// $('#userNameLink').text(getUserName() + '님');
-    // const headerElement = document.getElementById("header");
-	// const observer = new MutationObserver((mutationsList, observer) => {
-	// 	for (const mutation of mutationsList) {
-	// 	  if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-	// 		// header 요소의 자식 노드가 추가되었으므로 DOM 업데이트가 완료되었을 가능성이 높음
-	// 		const btnUserName = headerElement.querySelector("#userNameLink");
-	// 		if (btnUserName) {
-	// 			btnUserName.addEventListener("click", function() {
-	// 				location.href = "start.html";
-	// 		  });
-	// 		}
-	// 		setUserStageInfo();
-	// 		observer.disconnect(); // 더 이상 관찰할 필요가 없으면 연결 해제
-	// 		break;
-	// 	  }
-	// 	}
-	//   });
-  
-	// //   observer.observe(headerElement, { childList: true, subtree: true });
-	// if (observer) {
-	// 	observer.observe(headerElement, { childList: true, subtree: true });
-	//   } else {
-	// 	console.error("Error: MutationObserver instance was not created.");
-	//   }
+
+	startTime = getStartTime(); // 페이지 로드 시 시작 시간 기록
+	updateDisplayTime(); // 1초 딜레이 없애기
+	setInterval(updateDisplayTime, 1000); // 1초 간격으로 업데이트
+
+	updateProgress(); // 프로그래스바 업데이트
 }
 
 // fetch footer load된 다음 실행
 function initFooter(){
-		
+	const footerHtml = `
+            <div class="hint-area">
+            <div class="hint-control text-left font-weight-bold">
+                힌트 보기 <i class="bi bi-question-circle"></i>
+            </div>
+            <div class="hint-levels">
+                <button type="button" data-hint-level="1" class="btn btn-outline-secondary btn-sm hint-level-button">1단계</button>
+                <button type="button" data-hint-level="2" class="btn btn-outline-secondary btn-sm hint-level-button">2단계</button>
+                <button type="button" data-hint-level="3" class="btn btn-outline-secondary btn-sm hint-level-button">3단계</button>
+            </div>
+        </div>
+        `;
+
+	$("footer").append(footerHtml);
+	initFooterEvents();
+}
+
+// footer event 실행
+function initFooterEvents(){
 	$('.hint-area .hint-levels .btn').click(function(){ // 힌트버튼 클릭
 		if($(this).hasClass('btn-primary')){ // 이미 사용한 버튼은 팝업 안 띄우기
 			showExistHint($(this).attr("data-hint-level"));
@@ -289,18 +368,23 @@ function initFooter(){
 
 	setStageStartTime();
 
-	// updateHintBtn(); // 힌트 버튼 업데이트
-	// setInterval(updateDisplayTime, 6000); // 1분 간격으로 업데이트
+	updateHintBtn(); // 힌트 버튼 업데이트
+	// setInterval(updateDisplayTime, 60*1000); // 1분 간격으로 업데이트
+	setInterval(updateHintBtn, 10*1000); // 10초 간격으로 업데이트
 }
 
 // 힌트 버튼 업데이트트
 function updateHintBtn(){
-	$.each('.hint-area .hint-levels .btn', function(index, element) {
-		var hintLevel = (this).attr("data-hint-level");
+	$('.hint-area .hint-levels .btn').each(function(index, element) {
+		var hintLevel = parseInt($(this).attr("data-hint-level"));
 
 		const currentTime = new Date(); // 현재 시간
+		const currentStage = parseInt(getGameStage());
 		const timeDifferenceMs = currentTime - getStageStartTime(); // 밀리초 단위 차이
-		// if()
+	
+		if(timeDifferenceMs > (hintLevel*3*60*1000)){ // 힌트레벨 X 3분
+			$(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+		}
 	});
 }
 
@@ -314,4 +398,42 @@ function changeLockImg(obj, newBgIndex){
 	// 이미지가 완전히 로드된 후에 바꾸기
 	obj.css("background-image", `url('${newBg}')`);
 	};
+}
+
+// 진행상태 초기화
+function initProgress(){
+	const progressBarHTML = `
+            <div class="progress mb-3">
+                <div id="gameProgress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    0%
+                </div>
+            </div>
+        `;
+
+        // header의 맨 하위에 진행 바 삽입
+	// $("main").append(progressBarHTML);
+	
+	$("div.remaining-time-box").after(progressBarHTML);
+	updateProgress();
+}
+
+// 진행상태 업데이트
+function updateProgress() {
+	const currentStage = getGameStage();
+	const totalStages = getPuzzleDataLength();
+
+	if (currentStage <= totalStages) {
+		// 현재 단계를 퍼센트로 변환
+		const percentage = (currentStage / totalStages) * 100;
+		const progressBar = $("#gameProgress");
+		
+		// 진행 바의 스타일과 텍스트 업데이트
+		progressBar.css("width", percentage + "%");
+		progressBar.attr("aria-valuenow", percentage);
+		// progressBar.text(Math.round(percentage) + "%");
+		progressBar.text(""); // 텍스트를 비워서 숨김
+
+	} else {
+		// alert("게임이 완료되었습니다!");
+	}
 }

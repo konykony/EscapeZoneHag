@@ -11,16 +11,25 @@ function initCookieClear(password){
 		// 현재 도메인 정보
 		const domain = window.location.hostname;
 		
-		Cookies.remove('ezUserName', { domain: domain });
-		Cookies.remove('ezGameStage', { domain: domain });
-		Cookies.remove('ezStartTime', { domain: domain });
-		Cookies.remove('ezEndTime', { domain: domain });
-		Cookies.remove('ezHintData', { domain: domain });
+		// Cookies.remove('ezUserName', { domain: domain });
+		// Cookies.remove('ezGameStage', { domain: domain });
+		// Cookies.remove('ezStartTime', { domain: domain });
+		// Cookies.remove('ezEndTime', { domain: domain });
+		// Cookies.remove('ezHintData', { domain: domain });
+		// Cookies.remove('ezGameName', { domain: domain });
 
-		var currentStage = getGameStage();
-		puzzleData.puzzle.forEach(element => {
-			Cookies.remove('ezStage' + currentStage + 'StartTime', { domain: domain });
-		});
+		// var currentStage = 0;
+		// puzzleData.puzzle.forEach(element => {
+		// 	currentStage += 1;
+		// 	Cookies.remove('ezStage' + currentStage + 'StartTime', { domain: domain });
+		// });
+		const cookies = Cookies.get(); // 모든 쿠키를 key-value 객체 형태로 가져옵니다.
+
+		for (const cookieName in cookies) {
+		if (cookies.hasOwnProperty(cookieName)) {
+			Cookies.remove(cookieName, { domain: domain }); // 각 쿠키를 이름(key)을 사용하여 삭제합니다.
+		}
+		}
 		return true;
 	}else{
 		return false;
@@ -116,4 +125,14 @@ const cookie = getStageStartTimeCookie();
 function getStageStartTimeCookie(){
 	var currentStage = getGameStage();
 	return Cookies.get('ezStage' + currentStage + 'StartTime');
+}
+
+// 쿠키에 게임 이름 추가
+function setGameName(name){
+	Cookies.set('ezGameName', name, { expires: expiresDay, domain: window.location.hostname });
+}
+
+// 쿠키에서 게임 이름 가져오기
+function getGameName(){
+	return Cookies.get('ezGameName'); 
 }

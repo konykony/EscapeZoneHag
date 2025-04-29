@@ -65,6 +65,7 @@ function goNextPage() {
 		setEndTime();
 	} else if (nextPuzzle != null) {
 		setGameStage(nextStage);
+		setStageStartTime(); // 스테이지 시작 시간 추가
 		location.href = nextPuzzle.lock;
 	}
 }
