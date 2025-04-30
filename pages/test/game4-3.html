@@ -2,179 +2,158 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>EscapeZone</title>
+  <title>수건 캐비넷 퍼즐</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap, jQuery, jQuery UI, Touch Punch -->
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery + jQuery UI + Touch Punch -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
   <style>
-    body {
-      background-color: #f0f8ff;
-      padding: 20px;
-      text-align: center;
+    body { background: #f8f9fa; padding:20px; text-align:center; }
+    .dropzone {
+      width: 60px; height:60px;
+      border:2px dashed #bbb; border-radius:5px;
+      background:white; margin:0 5px; position:relative;
     }
-    .towel-area {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      margin-bottom: 20px;
+    .towel {
+      width:56px; height:56px;
+      border-radius:4px;
+      position:absolute; top:2px; left:2px;
+      z-index:1000; cursor:grab;
     }
-    /* 모든 수건에 동일 크기, z-index 높게 */
-    .towel, .towel-in, .ui-draggable, .ui-draggable-handle {
-      width: 50px; height: 50px;
-      margin: 5px;
-      border-radius: 10px;
-      border: 2px solid #999;
-      position: relative;
-      z-index: 1000;
-      cursor: grab;
+    .rack, .cabinets {
+      display:flex; justify-content:center; margin-bottom:20px;
     }
-    .cabinet-area {
-      display: flex; justify-content: center;
-      gap: 10px; flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .cabinet {
-      width: 70px; height: 200px;
-      border: 2px solid #333;
-      background-color: #eee;
-      border-radius: 10px;
-      position: relative;
-      overflow: visible;  /* 수건이 절대 숨지 않도록 */
-      z-index: 1;
-    }
-    .cabinet-number {
-      position: absolute;
-      top: 5px; width: 100%; text-align: center;
-      font-weight: bold; color: #555;
-      z-index: 2;
-    }
-    #result {
-      font-size: 18px; margin-top: 15px;
-    }
+    .cabinets .dropzone { height:120px; }
+    #controls { margin-bottom:10px; }
+    #result { margin-top:10px; font-weight:600; }
   </style>
 </head>
 <body>
 
-  <h4>🛁 수건을 드래그해서 캐비닛에 채워보세요!</h4>
+  <h4>🔍 수건 캐비넷 퍼즐</h4>
 
-  <div class="towel-area">
-    <div class="towel" style="background-color:#ff4d4d" data-color="red"></div>
-    <div class="towel" style="background-color:#ff9900" data-color="orange"></div>
-    <div class="towel" style="background-color:#ffff33" data-color="yellow"></div>
-    <div class="towel" style="background-color:#33cc33" data-color="green"></div>
-    <div class="towel" style="background-color:#3399ff" data-color="blue"></div>
-    <div class="towel" style="background-color:#003366" data-color="navy"></div>
-    <div class="towel" style="background-color:#800080" data-color="purple"></div>
+  <!-- 진열대 (7칸) -->
+  <div class="rack">
+    <div class="dropzone" data-pos="0"></div>
+    <div class="dropzone" data-pos="1"></div>
+    <div class="dropzone" data-pos="2"></div>
+    <div class="dropzone" data-pos="3"></div>
+    <div class="dropzone" data-pos="4"></div>
+    <div class="dropzone" data-pos="5"></div>
+    <div class="dropzone" data-pos="6"></div>
   </div>
 
-  <div class="cabinet-area">
-    <div class="cabinet" data-slot="0"><div class="cabinet-number">1</div></div>
-    <div class="cabinet" data-slot="1"><div class="cabinet-number">2</div></div>
-    <div class="cabinet" data-slot="2"><div class="cabinet-number">3</div></div>
-    <div class="cabinet" data-slot="3"><div class="cabinet-number">4</div></div>
+  <!-- 캐비넷 (4칸) -->
+  <div class="cabinets">
+    <div class="dropzone cabinet" data-pos="7"></div>
+    <div class="dropzone cabinet" data-pos="8"></div>
+    <div class="dropzone cabinet" data-pos="9"></div>
+    <div class="dropzone cabinet" data-pos="10"></div>
   </div>
 
-  <button id="resetBtn" class="btn btn-secondary">초기화</button>
+  <div id="controls">
+    <button id="resetBtn" class="btn btn-secondary">🔄 초기화</button>
+  </div>
   <div id="result"></div>
 
-  <script>
-    const correctColors = ["orange","navy","green","red"];
+<script>
+$(function(){
+  const colors = ['red','orange','yellow','green','blue','navy','purple'];
+  const solution = ['green','blue','red','yellow']; // 예시 정답
 
-    $(function(){
-      // 드래그 바인딩 (아직 바인딩 안 된 요소만)
-      function bindDraggable(){
-        $(".towel, .towel-in")
-          .not(".ui-draggable")   // 이미 draggable이면 제외
-          .draggable({
-            helper: "clone",
-            revert: "invalid",
-            containment: "body",
-            appendTo: "body",
-            cursorAt: { top:25, left:25 },
-            scroll: false
-          });
-      }
-      bindDraggable();
-
-      // 드롭: 빈칸·교환 처리
-      $(".cabinet").droppable({
-        accept: ".towel, .towel-in",
-        drop(event, ui){
-          const $target = $(this);
-          const color = ui.helper.data("color");
-
-          // 원본 요소(진열대 또는 캐비넷) 선택
-          const $original = $(".towel, .towel-in")
-            .filter((i,el)=>$(el).data("color")===color).first();
-          if(!$original.length) return;
-
-          // 출발지 컨테이너
-          const $src = $original.closest(".cabinet").length
-            ? $original.closest(".cabinet")
-            : $(".towel-area");
-
-          // 기존에 있던 수건 교환
-          const $exist = $target.find(".towel-in");
-          $original.detach();  
-
-          if($exist.length){
-            const $prev = $exist.detach()
-              .removeClass("towel-in").addClass("towel");
-            $src.append($prev);
-            resetStyle($prev);
-          }
-
-          // 원본 수건 타깃에 배치
-          $original
-            .removeClass("towel").addClass("towel-in")
-            .appendTo($target);
-          placeCenter($original);
-
-          bindDraggable();  // 새로 붙인 수건에도 드래그 다시 걸기
-          checkResult();
-        }
-      });
-
-      // 초기화
-      $("#resetBtn").click(()=>location.reload());
-
-      // 캐비넷 안 배치
-      function placeCenter($t){
-        $t.css({
-          position: "absolute",
-          top: "50%", left: "50%",
-          transform: "translate(-50%,-50%)"
-        });
-      }
-      // 진열대 복귀 스타일 초기화
-      function resetStyle($t){
-        $t.css({
-          position: "relative",
-          top: "auto", left: "auto",
-          transform: "none"
-        });
-      }
-
-      // 정답 체크
-      function checkResult(){
-        let cMatch=0, pMatch=0;
-        $(".cabinet").each((i,el)=>{
-          const $t=$(el).find(".towel-in");
-          if($t.length){
-            const c=$t.data("color");
-            if(correctColors.includes(c)) cMatch++;
-            if(correctColors[i]===c) pMatch++;
-          }
-        });
-        if($(".towel-in").length===4){
-          $("#result").html(`색상 일치: ${cMatch}개<br>위치 일치: ${pMatch}개`);
-        } else {
-          $("#result").empty();
-        }
-      }
+  // 1) 초기화
+  function init(){
+    $('.dropzone').empty();
+    $('#result').empty();
+    colors.forEach((c,i)=>{
+      const $dz = $(`.dropzone[data-pos=${i}]`);
+      const $tv = $('<div>').addClass('towel').css('background',c).attr('data-color',c);
+      $dz.append($tv);
     });
-  </script>
+    bindDrag();
+  }
+
+  // 2) 드래그 바인딩
+  function bindDrag(){
+    $('.towel').draggable({
+      helper:'clone',
+      appendTo:'body',
+      revert:'invalid',
+      cursorAt:{ top:28, left:28 },
+      start(e,ui){ ui.helper.css('z-index',9999); }
+    });
+  }
+
+  // 3) 드롭 처리
+  $('.dropzone').droppable({
+    accept:'.towel',
+    hoverClass:'border-primary',
+    drop(e,ui){
+      const $helper = ui.helper;      // clone helper
+      const $orig   = ui.draggable;   // 실제 수건
+      const srcPos  = +$orig.parent().data('pos');
+      const $srcDZ  = $orig.parent();
+      const $tgtDZ  = $(this);
+      const tgtPos  = +$tgtDZ.data('pos');
+      if(srcPos===tgtPos){
+        $helper.remove(); // 그대로 버리고 리버트 없이
+        return;
+      }
+      // 3-1) helper 제거
+      $helper.remove();
+
+      // 3-2) swap 대상 확인
+      const $exist = $tgtDZ.find('.towel');
+      // 3-3) 원본 수건 떼어내기
+      $orig.detach();
+
+      // 3-4) 교환 대상이 있으면 srcDZ로 이동
+      if($exist.length){
+        $exist.detach().appendTo($srcDZ);
+        resetStyle($exist);
+      }
+
+      // 3-5) 원본 수건 tgtDZ로 이동
+      $orig.appendTo($tgtDZ);
+      positionInZone($orig);
+
+      bindDrag();  // 이동된 것 다시 드래그 가능
+      updateResult();
+    }
+  });
+
+  // 4) 스타일 헬퍼
+  function positionInZone($t){
+    $t.css({ position:'absolute', top:'2px', left:'2px' });
+  }
+  function resetStyle($t){
+    $t.css({ position:'absolute', top:'2px', left:'2px' });
+  }
+
+  // 5) 결과 업데이트
+  function updateResult(){
+    const filled = $('.cabinet .towel').length;
+    if(filled<4){
+      $('#result').empty(); return;
+    }
+    let cm=0, pm=0;
+    $('.cabinet').each((i,el)=>{
+      const c = $(el).find('.towel').data('color');
+      if(solution.includes(c)) cm++;
+      if(solution[i]===c) pm++;
+    });
+    $('#result').text(`색상 일치: ${cm}개, 색상+위치 일치: ${pm}개`);
+  }
+
+  // 6) 초기화
+  $('#resetBtn').click(init);
+
+  init();
+});
+</script>
 </body>
 </html>
