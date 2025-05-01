@@ -12,16 +12,13 @@
   <div class="container mt-5">
     <h2 class="mb-4 text-center">힌트 코드 조회</h2>
     <div class="row mb-3">
-        <!-- <div class="col-md-6"> -->
       <div class="col-12 col-md-6">
         <label for="hintIndex" class="form-label">힌트 번호 선택 (1~12)</label>
         <select id="hintIndex" class="form-select">
           <option value="">선택하세요</option>
-          <!-- 힌트 인덱스 옵션 생성 -->
         </select>
       </div>
-      <!-- <div class="col-md-6"> -->
-    <div class="col-12 col-md-6">
+      <div class="col-12 col-md-6">
         <label for="codeKey" class="form-label">코드 종류 선택</label>
         <select id="codeKey" class="form-select" disabled>
           <option value="">선택하세요</option>
@@ -38,26 +35,27 @@
   </div>
 
   <script>
-
-    // 페이지 로드 시 hintIndex 옵션 추가
     $(document).ready(function() {
+      // 힌트 번호 옵션 생성
       for (let i = 0; i < hintConData.hint.length; i++) {
         $('#hintIndex').append(`<option value="${i}">${i + 1}번 힌트</option>`);
       }
     });
 
-    // 힌트 번호 선택 시 codeKey 활성화
+    // 힌트 번호 선택 시
     $('#hintIndex').on('change', function () {
       const selectedIndex = $(this).val();
+      $('#codeKey').val(''); // 선택 초기화
+      $('#resultBox').addClass('d-none'); // 결과 숨기기
+
       if (selectedIndex !== "") {
         $('#codeKey').prop('disabled', false);
       } else {
         $('#codeKey').prop('disabled', true);
-        $('#resultBox').addClass('d-none');
       }
     });
 
-    // 코드 종류 선택 시 결과 표시
+    // 코드 종류 선택 시
     $('#codeKey').on('change', function () {
       const selectedIndex = $('#hintIndex').val();
       const selectedCode = $(this).val();
@@ -66,7 +64,6 @@
         const codeValue = hintConData.hint[selectedIndex][selectedCode];
         const formattedCode = String(codeValue).replace(/(\d{3})(\d{3})(\d{2})/, '$1-$2-$3');
         $('#codeResult').text(formattedCode);
-        // $('#codeResult').text(codeValue);
         $('#resultBox').removeClass('d-none');
       } else {
         $('#resultBox').addClass('d-none');
