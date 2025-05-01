@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-<body>
+<body class="overflow-hidden">
 
 	<div class="container">
         <h2 class="mb-3" id="title">내 기록</h2>
@@ -82,27 +82,68 @@
 
         // play-time 클릭 이벤트 추가
         $(".play-time").on("click", function () {
-            $('body').css('transform', 'rotate(90deg)');
+            $('body').css({
+                // 'transform': 'rotate(90deg)',
+            });
             $(".description").hide(); // 설명 숨기기
             $("#title").css({
                 "font-size": "3rem",
             });
             $("#title").removeClass("mb-3");
+            // $(".container").css({
+            //     'transform': 'rotate(90deg)',
+            //     // "transform-origin":" top left",
+            //     "width": "90%",
+            //     "max-width": "600px", // 최대 가로폭 제한
+            //     "height": "100vh",
+            //     "display": "flex",
+            //     "justify-content": "center",
+            //     "align-items": "center",
+            //     "flex-direction": "column",
+            //     "padding": "0", // 내부 여백 제거
+            //     "box-shadow":"none",
+            //     "background-color" : "#f8f9fa"
+            // });
+            // $(".play-time").css({
+            //     "font-size": "10rem",
+            //     "transition": "font-size 0.5s ease",
+            // });
+
+                // body와 html에 스크롤 제거
+            $("body, html").css({
+                overflow: "hidden",
+                margin: 0,
+                padding: 0
+            });
+
             $(".container").css({
-                "width": "100%",
-                "max-width": "none",
-                "height": "100vh",
-                "display": "flex",
-                "justify-content": "center",
-                "align-items": "center",
-                "flex-direction": "column",
+                width: "100vh",     // 회전되기 때문에 세로를 가로로
+                height: "100vw",    // 회전되기 때문에 가로를 세로로
+                transform: "rotate(90deg)",
+                transformOrigin: "center",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%) rotate(90deg)", // 중앙 정렬 + 회전
+                padding: 0,
+                boxSizing: "border-box",
                 "box-shadow":"none",
                 "background-color" : "#f8f9fa"
             });
+
             $(".play-time").css({
-                "font-size": "10rem",
-                "transition": "font-size 0.5s ease"
+                fontSize: "10rem", // 화면 너비 기준으로 글자 크기 설정
+                transition: "font-size 0.5s ease",
+                "padding-top": "3rem"
             });
+
+            $("#title").css({
+                position: "absolute",
+                top: "2rem",
+            })
             // $("#title").hide(); // 제목도 함께 숨기고 싶으면 이 줄 유지
         });
     </script>
